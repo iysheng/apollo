@@ -339,6 +339,7 @@
                     <state>D:\Apollo\gpio\CMSIS_header</state>
                     <state>D:\Apollo\gpio\CMSIS_core</state>
                     <state>D:\Apollo\gpio\HAL_Driver\Inc</state>
+                    <state>D:\Apollo\gpio</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -626,15 +627,15 @@
                 <option>
                     <name>OOCOutputFormat</name>
                     <version>3</version>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>OCOutputOverride</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>OOCOutputFile</name>
-                    <state></state>
+                    <state>gpio.hex</state>
                 </option>
                 <option>
                     <name>OOCCommandLineProducer</name>
@@ -642,7 +643,7 @@
                 </option>
                 <option>
                     <name>OOCObjCopyEnable</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
             </data>
         </settings>
@@ -2070,9 +2071,24 @@
         <file>
             <name>$PROJ_DIR$\..\..\STM32Cube_FW_F7_V1.6.0\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_gpio.c</name>
         </file>
+        <file>
+            <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal_pwr_ex.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal_rcc.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal_uart.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_it.c</name>
+        </file>
     </group>
     <group>
         <name>USER</name>
+        <file>
+            <name>$PROJ_DIR$\delay.c</name>
+        </file>
         <file>
             <name>$PROJ_DIR$\main.c</name>
         </file>
