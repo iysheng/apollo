@@ -1,9 +1,10 @@
 #include <string.h>
+#include <stdlib.h>
 #include "stm32f767xx.h"
 #include "main.h"
 
 uint32_t freq=0;
-UART_HandleTypeDef IUART2;
+UART_HandleTypeDef IUARTX;
 
   
 void HAL_UART_MspInit(UART_HandleTypeDef *huart)
@@ -98,6 +99,10 @@ void SystemClock_Config(void)
 int main()
 {  
   uint8_t *istr="hello china.";
+  UART_HandleTypeDef *IUART2;
+  UART_HandleTypeDef JUART2;
+  IUART2=(UART_HandleTypeDef *)malloc(sizeof(UART_HandleTypeDef));
+  memset(&JUART2,0,sizeof(UART_HandleTypeDef));
   GPIO_InitTypeDef GPIO_Initure;
 
   //UART_InitTypeDef UART_Initure;
@@ -116,7 +121,19 @@ int main()
   GPIO_Initure.Speed=GPIO_SPEED_HIGH;     //∏ﬂÀŸ
   HAL_GPIO_Init(GPIOB,&GPIO_Initure);     //≥ı ºªØGPIOB.0∫ÕGPIOB.1
 
-  IUART2.Instance=USART2;
+   __HAL_RCC_GPIOH_CLK_ENABLE();	
+  GPIO_Initure.Pin=GPIO_PIN_2|GPIO_PIN_3;
+  GPIO_Initure.Mode=GPIO_MODE_IT_RISING;
+  GPIO_Initure.Pull=GPIO_PULLUP;
+  GPIO_Initure.Speed=GPIO_SPEED_HIGH;
+  HAL_GPIO_Init(GPIOH,&GPIO_Initure);
+  HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_1);
+  HAL_NVIC_EnableIRQ(EXTI2_IRQn);
+  HAL_NVIC_SetPriority(EXTI2_IRQn, 0x0, 0);
+  HAL_NVIC_EnableIRQ(EXTI3_IRQn);
+  HAL_NVIC_SetPriority(EXTI3_IRQn, 0x0, 0);
+  
+  JUART2.Instance=USART2;
   /*UART_Initure.BaudRate=9600;
   UART_Initure.WordLength=UART_WORDLENGTH_8B;
   UART_Initure.Parity=UART_PARITY_NONE;
@@ -124,23 +141,41 @@ int main()
   UART_Initure.Mode=UART_MODE_TX_RX;
   UART_Initure.HwFlowCtl=UART_HWCONTROL_NONE;
   memcpy(&(IUART2.Init),&UART_Initure,sizeof(UART_Initure));*/
-  IUART2.Init.BaudRate=9600;
-  IUART2.Init.WordLength=UART_WORDLENGTH_8B;
-  IUART2.Init.StopBits=UART_STOPBITS_1;
-  IUART2.Init.Parity=UART_PARITY_NONE;
-  IUART2.Init.Mode=UART_MODE_TX_RX;
-  IUART2.Init.HwFlowCtl=UART_HWCONTROL_NONE;
-  HAL_UART_Init(&IUART2);  
+  JUART2.Init.BaudRate=9600;
+  JUART2.Init.WordLength=UART_WORDLENGTH_8B;
+  JUART2.Init.StopBits=UART_STOPBITS_1;
+  JUART2.Init.Parity=UART_PARITY_NONE;
+  JUART2.Init.Mode=UART_MODE_TX_RX;
+  JUART2.Init.HwFlowCtl=UART_HWCONTROL_NONE;
 
+  HAL_UART_Init(&JUART2);  
+  
+  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);	//PB0÷√1,œ®√
+  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_1,GPIO_PIN_RESET);	//PB1÷√0,µ„¡¡
   while(1){
   //HAL_UART_Transmit_IT(&IUART2, istr, sizeof(istr)); 
-  HAL_UART_Transmit(&IUART2, istr, strlen(istr), 1000);
-  //iputc('i');
-  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);	//PB0÷√1,œ®√
-  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_1,GPIO_PIN_SET);	//PB1÷√0,µ„¡¡
+  HAL_UART_Transmit(&JUART2, istr, strlen(istr), 1000);
   HAL_Delay(1000);                                      //—” ±1000ms
-  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_RESET);	//PB0÷√1,œ®√
-  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_1,GPIO_PIN_RESET);	//PB1÷√0,µ„¡¡
-  HAL_Delay(1000);
   }
+  free(IUART2);
+}
+
+void EXTI2_IRQHandler(void) {
+  __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_2);
+  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);	//PB0÷√1,œ®√
+  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_1,GPIO_PIN_SET);	//PB1÷√0,µ„¡¡  
+}
+
+void EXTI3_IRQHandler(void) {
+  __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_3);
+  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_RESET);	//PB0÷√1,œ®√
+  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_1,GPIO_PIN_RESET);	//PB1÷√0,µ„¡¡ 
+}
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+  if(GPIO_Pin == EXTI2_IRQn)
+    EXTI2_IRQHandler();
+  else if(GPIO_Pin == EXTI3_IRQn)
+    EXTI3_IRQHandler();
 }
