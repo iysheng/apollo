@@ -2314,39 +2314,18 @@
         </settings>
     </configuration>
     <group>
+        <name>APOLLO-BSP</name>
+        <file>
+            <name>$PROJ_DIR$\Bsp\apollo.c</name>
+        </file>
+    </group>
+    <group>
         <name>CMSIS-CORE</name>
         <file>
             <name>$PROJ_DIR$\CMSIS_core\startup_stm32f767xx.s</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\CMSIS_core\stm32f767xx.h</name>
-        </file>
-        <file>
             <name>$PROJ_DIR$\CMSIS_core\system_stm32f7xx.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\CMSIS_core\system_stm32f7xx.h</name>
-        </file>
-    </group>
-    <group>
-        <name>CMSIS-HEADER</name>
-        <file>
-            <name>$PROJ_DIR$\CMSIS_header\core_cm7.h</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\CMSIS_header\core_cmFunc.h</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\CMSIS_header\core_cmInstr.h</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\CMSIS_header\core_cmSimd.h</name>
-        </file>
-    </group>
-    <group>
-        <name>HAL-INC</name>
-        <file>
-            <name>$PROJ_DIR$\..\..\STM32Cube_FW_F7_V1.6.0\Drivers\STM32F7xx_HAL_Driver\Inc\stm32f7xx_ll_gpio.h</name>
         </file>
     </group>
     <group>
@@ -2378,9 +2357,6 @@
     </group>
     <group>
         <name>USER</name>
-        <file>
-            <name>$PROJ_DIR$\delay.c</name>
-        </file>
         <file>
             <name>$PROJ_DIR$\main.c</name>
         </file>

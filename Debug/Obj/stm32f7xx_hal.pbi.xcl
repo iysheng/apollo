@@ -10,6 +10,8 @@ D:\Apollo\gpio\HAL_Driver\Inc
 -I
 D:\Apollo\gpio
 -I
+D:\Apollo\gpio\Bsp
+-I
 D:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\inc
 -I
 D:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\inc\c
@@ -21,6 +23,8 @@ D:\Apollo\gpio\CMSIS_core
 D:\Apollo\gpio\HAL_Driver\Inc
 -I
 D:\Apollo\gpio
+-I
+D:\Apollo\gpio\Bsp
 -D__CHAR_BITS__=8
 -D__CHAR_MAX__=0xff
 -D__CHAR_MIN__=0
