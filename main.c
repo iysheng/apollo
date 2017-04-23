@@ -3,9 +3,21 @@
 #include "stm32f767xx.h"
 #include "main.h"
 
+
+#ifdef __GNUC__
+  /* With GCC, small printf (option LD Linker->Libraries->Small printf
+     set to 'Yes') calls __io_putchar() */
+  #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#else
+  #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#endif /* __GNUC__ */
+
+#define RSTR_SIZE 32
+
+
 uint32_t freq=0;
 UART_HandleTypeDef IUARTX;
-
+UART_HandleTypeDef JUART2;
   
 void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 {
@@ -96,11 +108,21 @@ void SystemClock_Config(void)
     if(ret!=HAL_OK) while(1);
 }
 
+PUTCHAR_PROTOTYPE
+{
+  /* Place your implementation of fputc here */
+  /* e.g. write a character to the EVAL_COM1 and Loop until the end of transmission */
+  HAL_UART_Transmit(&JUART2, (uint8_t *)&ch, 1, 0xFFFF); 
+
+  return ch;
+}
+
 int main()
 {  
   uint8_t *istr="hello china.";
+  uint8_t *rstr;
   UART_HandleTypeDef *IUART2;
-  UART_HandleTypeDef JUART2;
+  rstr=(uint8_t *)malloc(RSTR_SIZE*sizeof(uint8_t));
   IUART2=(UART_HandleTypeDef *)malloc(sizeof(UART_HandleTypeDef));
   memset(&JUART2,0,sizeof(UART_HandleTypeDef));
   GPIO_InitTypeDef GPIO_Initure;
@@ -129,9 +151,9 @@ int main()
   HAL_GPIO_Init(GPIOH,&GPIO_Initure);
   HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_1);
   HAL_NVIC_EnableIRQ(EXTI2_IRQn);
-  HAL_NVIC_SetPriority(EXTI2_IRQn, 0x0, 0);
+  HAL_NVIC_SetPriority(EXTI2_IRQn, 0x0, 1);
   HAL_NVIC_EnableIRQ(EXTI3_IRQn);
-  HAL_NVIC_SetPriority(EXTI3_IRQn, 0x0, 0);
+  HAL_NVIC_SetPriority(EXTI3_IRQn, 0x0, 1);
   
   JUART2.Instance=USART2;
   /*UART_Initure.BaudRate=9600;
@@ -148,16 +170,27 @@ int main()
   JUART2.Init.Mode=UART_MODE_TX_RX;
   JUART2.Init.HwFlowCtl=UART_HWCONTROL_NONE;
 
-  HAL_UART_Init(&JUART2);  
+  HAL_UART_Init(&JUART2);
+  HAL_NVIC_EnableIRQ(USART2_IRQn);
+  HAL_NVIC_SetPriority(USART2_IRQn, 0x0, 0); 
   
   HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);	//PB0÷√1,œ®√
   HAL_GPIO_WritePin(GPIOB,GPIO_PIN_1,GPIO_PIN_RESET);	//PB1÷√0,µ„¡¡
+  /* Output a message on Hyperterminal using printf function */
+  printf("\n\rApollo UART Printf Example: retarget the C library printf function to the UART\n\r");
+  HAL_UART_Transmit_IT(&JUART2, istr, strlen(istr)); 
   while(1){
-  //HAL_UART_Transmit_IT(&IUART2, istr, sizeof(istr)); 
-  HAL_UART_Transmit(&JUART2, istr, strlen(istr), 1000);
+  
+  if(0==HAL_UART_Receive_IT(&JUART2, rstr, RSTR_SIZE))
+    HAL_UART_Transmit_IT(&JUART2, rstr, RSTR_SIZE); 
+  //HAL_UART_Transmit(&JUART2, istr, strlen(istr), 1000);
   HAL_Delay(1000);                                      //—” ±1000ms
   }
   free(IUART2);
+}
+
+void USART2_IRQHandler(void) {
+  HAL_UART_IRQHandler(&JUART2);
 }
 
 void EXTI2_IRQHandler(void) {

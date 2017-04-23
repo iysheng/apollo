@@ -1,6 +1,8 @@
 #include "sys.h"
 #include "delay.h"
 
+
+
 uint32_t systick_init(void)
 {
   HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
@@ -21,3 +23,9 @@ void delay_ms(uint32_t micsec)
     
   while(HAL_GetTick()!=new_uwTick);  
 }
+
+/**
+  * @brief  Retargets the C library printf function to the USART.
+  * @param  None
+  * @retval None
+  */
