@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// IAR ANSI C/C++ Compiler V8.11.1.13263/W32 for ARM      23/Apr/2017  23:06:45
+// IAR ANSI C/C++ Compiler V8.11.1.13263/W32 for ARM      24/Apr/2017  15:28:48
 // Copyright 1999-2017 IAR Systems AB.
 //
 //    Cpu mode     =  thumb
 //    Endian       =  little
 //    Source file  =  D:\Apollo\gpio\main.c
 //    Command line =  
-//        -f C:\Users\iysheng\AppData\Local\Temp\EW9697.tmp
+//        -f C:\Users\iysheng\AppData\Local\Temp\EW35BB.tmp
 //        (D:\Apollo\gpio\main.c -D STM32F767xx -lb D:\Apollo\gpio\Debug\List
 //        -o D:\Apollo\gpio\Debug\Obj --no_cse --no_unroll --no_inline
 //        --no_code_motion --no_tbaa --no_clustering --no_scheduling --debug
@@ -23,23 +23,24 @@
 
         #define SHT_PROGBITS 0x1
 
+        EXTERN HAL_ADC_GetValue
+        EXTERN HAL_ADC_PollForConversion
+        EXTERN HAL_ADC_Start
         EXTERN HAL_Delay
         EXTERN HAL_Init
         EXTERN HAL_NVIC_EnableIRQ
         EXTERN HAL_NVIC_SetPriority
         EXTERN HAL_NVIC_SetPriorityGrouping
+        EXTERN IADC
         EXTERN IUART
         EXTERN KEY_init
         EXTERN LED_init
-        EXTERN LED_off
         EXTERN LED_on
+        EXTERN TEMP_init
         EXTERN UART_init
-        EXTERN __aeabi_memset
         EXTERN printf
         EXTERN rstr
-        EXTERN scanf
         EXTERN sprintf
-        EXTERN strlen
 
         PUBLIC main
         PUBLIC sscanf_i
@@ -53,10 +54,8 @@ sscanf_i:
         SECTION `.text`:CODE:NOROOT(2)
         THUMB
 main:
-        PUSH     {R4,LR}
-        SUB      SP,SP,#+8
+        PUSH     {R7,LR}
         MOVS     R0,#+113
-        STRB     R0,[SP, #+0]
         BL       HAL_Init
         BL       LED_init
         BL       KEY_init
@@ -81,57 +80,54 @@ main:
         BL       HAL_Delay
         LDR.N    R0,??main_0+0x8
         BL       printf
-        BL       LED_on
+        BL       TEMP_init
+        LDR.N    R0,??main_0+0xC
+        BL       printf
+        LDR.N    R0,??main_0+0x10
+        BL       HAL_ADC_Start
+??main_1:
+        MOVS     R1,#-1
+        LDR.N    R0,??main_0+0x10
+        BL       HAL_ADC_PollForConversion
+        LDR.N    R0,??main_0+0x10
+        BL       HAL_ADC_GetValue
+        VMOV     S0,R0
+        VCVT.F32.U32 S0,S0
+        VLDR.W   S1,??main_0+0x14  ;; 0x457ff000
+        VDIV.F32 S0,S0,S1
+        VLDR.W   S1,??main_0+0x18  ;; 0x454e4000
+        VMUL.F32 S0,S0,S1
+        VCVT.F64.F32 D0,S0
+        VLDR.W   D2,??main_0+0x1C
+        VADD.F64 D0,D0,D2
+        VMOV.F64 D2,#2.5
+        VDIV.F64 D0,D0,D2
+        VMOV.F64 D2,#25.0
+        VADD.F64 D0,D0,D2
+        VCVT.F32.F64 S0,D0
+        VCVT.F64.F32 D0,S0
+        VMOV     R2,R3,D0
+        LDR.N    R1,??main_0+0x24
+        LDR.N    R0,??main_0+0x28
+        BL       sprintf
+        LDR.N    R1,??main_0+0x28
+        ADR.N    R0,??main_0      ;; 0x25, 0x73, 0x00, 0x00
+        BL       printf
         MOV      R0,#+1000
         BL       HAL_Delay
-        BL       LED_off
         B.N      ??main_1
-??main_2:
-        LDRB     R2,[SP, #+0]
-        ADR.N    R1,??main_0      ;; 0x25, 0x63, 0x00, 0x00
-        LDR.N    R0,??main_0+0xC
-        LDR.N    R3,??main_0+0x10
-        LDR      R3,[R3, #+0]
-        ADD      R0,R0,R3
-        BL       sprintf
-        LDR.N    R0,??main_0+0x10
-        LDR      R0,[R0, #+0]
-        ADDS     R0,R0,#+1
-        LDR.N    R1,??main_0+0x10
-        STR      R0,[R1, #+0]
-??main_1:
-        MOV      R1,SP
-        ADR.N    R0,??main_0      ;; 0x25, 0x63, 0x00, 0x00
-        BL       scanf
-        LDRB     R1,[SP, #+0]
-        ADR.N    R0,??main_0      ;; 0x25, 0x63, 0x00, 0x00
-        BL       printf
-        LDRB     R0,[SP, #+0]
-        CMP      R0,#+13
-        BNE.N    ??main_2
-        LDR.N    R1,??main_0+0xC
-        LDR.N    R0,??main_0+0x14
-        BL       printf
-        MOVS     R0,#+0
-        LDR.N    R1,??main_0+0x10
-        STR      R0,[R1, #+0]
-        LDR.N    R0,??main_0+0xC
-        BL       strlen
-        MOVS     R2,#+0
-        LDR.N    R4,??main_0+0xC
-        MOVS     R1,R0
-        MOVS     R0,R4
-        BL       __aeabi_memset
-        B.N      ??main_1
-        Nop      
         DATA
 ??main_0:
-        DC8      0x25, 0x63, 0x00, 0x00
+        DC8      0x25, 0x73, 0x00, 0x00
         DC32     IUART
         DC32     ?_0
-        DC32     rstr
-        DC32     sscanf_i
+        DC32     ?_1
+        DC32     IADC
+        DC32     0x457ff000
+        DC32     0x454e4000
+        DC32     0x0,0xC087C000
         DC32     ?_2
+        DC32     rstr
 
         SECTION `.iar_vfe_header`:DATA:NOALLOC:NOROOT(2)
         SECTION_TYPE SHT_PROGBITS, 0
@@ -145,24 +141,30 @@ main:
 
         SECTION `.rodata`:CONST:REORDER:NOROOT(2)
         DATA
-        DC8 "%c"
+?_1:
+        DC8 "\015\012*****Tempurate init finished!*****\012\015"
         DC8 0
 
         SECTION `.rodata`:CONST:REORDER:NOROOT(2)
         DATA
 ?_2:
-        DC8 "\012\015%s\012\015"
+        DC8 "the tempture is %f.\012\015"
+        DC8 0, 0
+
+        SECTION `.rodata`:CONST:REORDER:NOROOT(2)
+        DATA
+        DC8 "%s"
         DC8 0
 
         END
 // 
 //   4 bytes in section .bss
-//  52 bytes in section .rodata
-// 216 bytes in section .text
+// 108 bytes in section .rodata
+// 244 bytes in section .text
 // 
-// 216 bytes of CODE  memory
-//  52 bytes of CONST memory
+// 244 bytes of CODE  memory
+// 108 bytes of CONST memory
 //   4 bytes of DATA  memory
 //
 //Errors: none
-//Warnings: 2
+//Warnings: 4
