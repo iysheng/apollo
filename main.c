@@ -11,7 +11,6 @@ int main()
   int dtemp;
   uint32_t uitemp;
   float ftemp;
-  //rstr=(uint8_t *)malloc(RSTR_SIZE*sizeof(uint8_t));
   
   HAL_Init();
   LED_init();  
@@ -28,9 +27,9 @@ int main()
   LED_on();
   HAL_Delay(1000);//—” ±1000ms
   /* Output a message on Hyperterminal using printf function */
-  printf("*****Welocome to Apollo's world!*****\n\r");
-  TEMP_init();
-  printf("\r\n*****Tempurate init finished!*****\n\r");
+  printf("\r\n*****Welocome to Apollo's world!*****\n\r");
+  TPAD_init();
+  printf("\r\n*****Tempetuarate init finished!*****\n\r");
   //LED_on();
   //HAL_Delay(1000);//—” ±1000ms
   //LED_off();
@@ -40,8 +39,8 @@ int main()
   HAL_ADC_PollForConversion(&IADC,HAL_MAX_DELAY);
   uitemp=HAL_ADC_GetValue(&IADC);
   ftemp=((float)uitemp)/4095*3300;
-  ftemp=((ftemp-760.0)/2.5)+25;
-  sprintf(rstr,"the tempture is %f.\n\r",ftemp);
+  //ftemp=((ftemp-760.0)/2.5)+25;
+  sprintf((char *)rstr,"the tempture is %f.\n\r",ftemp);
   printf("%s",rstr);
   HAL_Delay(1000);  
   /*scanf("%s",stemp);

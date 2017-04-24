@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// IAR ANSI C/C++ Compiler V8.11.1.13263/W32 for ARM      24/Apr/2017  15:28:48
+// IAR ANSI C/C++ Compiler V8.11.1.13263/W32 for ARM      24/Apr/2017  16:32:57
 // Copyright 1999-2017 IAR Systems AB.
 //
 //    Cpu mode     =  thumb
 //    Endian       =  little
 //    Source file  =  D:\Apollo\gpio\main.c
 //    Command line =  
-//        -f C:\Users\iysheng\AppData\Local\Temp\EW35BB.tmp
+//        -f C:\Users\iysheng\AppData\Local\Temp\EWF258.tmp
 //        (D:\Apollo\gpio\main.c -D STM32F767xx -lb D:\Apollo\gpio\Debug\List
 //        -o D:\Apollo\gpio\Debug\Obj --no_cse --no_unroll --no_inline
 //        --no_code_motion --no_tbaa --no_clustering --no_scheduling --debug
@@ -36,7 +36,7 @@
         EXTERN KEY_init
         EXTERN LED_init
         EXTERN LED_on
-        EXTERN TEMP_init
+        EXTERN TPAD_init
         EXTERN UART_init
         EXTERN printf
         EXTERN rstr
@@ -73,59 +73,50 @@ main:
         MOVS     R1,#+0
         MOVS     R0,#+9
         BL       HAL_NVIC_SetPriority
-        LDR.N    R0,??main_0+0x4
+        LDR.N    R0,??main_0+0xC
         BL       UART_init
         BL       LED_on
         MOV      R0,#+1000
         BL       HAL_Delay
-        LDR.N    R0,??main_0+0x8
-        BL       printf
-        BL       TEMP_init
-        LDR.N    R0,??main_0+0xC
-        BL       printf
         LDR.N    R0,??main_0+0x10
+        BL       printf
+        BL       TPAD_init
+        LDR.N    R0,??main_0+0x14
+        BL       printf
+        LDR.N    R0,??main_0+0x18
         BL       HAL_ADC_Start
 ??main_1:
         MOVS     R1,#-1
-        LDR.N    R0,??main_0+0x10
+        LDR.N    R0,??main_0+0x18
         BL       HAL_ADC_PollForConversion
-        LDR.N    R0,??main_0+0x10
+        LDR.N    R0,??main_0+0x18
         BL       HAL_ADC_GetValue
         VMOV     S0,R0
         VCVT.F32.U32 S0,S0
-        VLDR.W   S1,??main_0+0x14  ;; 0x457ff000
+        VLDR.W   S1,??main_0      ;; 0x457ff000
         VDIV.F32 S0,S0,S1
-        VLDR.W   S1,??main_0+0x18  ;; 0x454e4000
+        VLDR.W   S1,??main_0+0x4  ;; 0x454e4000
         VMUL.F32 S0,S0,S1
         VCVT.F64.F32 D0,S0
-        VLDR.W   D2,??main_0+0x1C
-        VADD.F64 D0,D0,D2
-        VMOV.F64 D2,#2.5
-        VDIV.F64 D0,D0,D2
-        VMOV.F64 D2,#25.0
-        VADD.F64 D0,D0,D2
-        VCVT.F32.F64 S0,D0
-        VCVT.F64.F32 D0,S0
         VMOV     R2,R3,D0
-        LDR.N    R1,??main_0+0x24
-        LDR.N    R0,??main_0+0x28
+        LDR.N    R1,??main_0+0x1C
+        LDR.N    R0,??main_0+0x20
         BL       sprintf
-        LDR.N    R1,??main_0+0x28
-        ADR.N    R0,??main_0      ;; 0x25, 0x73, 0x00, 0x00
+        LDR.N    R1,??main_0+0x20
+        ADR.N    R0,??main_0+0x8  ;; 0x25, 0x73, 0x00, 0x00
         BL       printf
         MOV      R0,#+1000
         BL       HAL_Delay
         B.N      ??main_1
         DATA
 ??main_0:
+        DC32     0x457ff000
+        DC32     0x454e4000
         DC8      0x25, 0x73, 0x00, 0x00
         DC32     IUART
         DC32     ?_0
         DC32     ?_1
         DC32     IADC
-        DC32     0x457ff000
-        DC32     0x454e4000
-        DC32     0x0,0xC087C000
         DC32     ?_2
         DC32     rstr
 
@@ -137,13 +128,14 @@ main:
         SECTION `.rodata`:CONST:REORDER:NOROOT(2)
         DATA
 ?_0:
-        DC8 "*****Welocome to Apollo's world!*****\012\015"
+        DC8 "\015\012*****Welocome to Apollo's world!*****\012\015"
+        DC8 0, 0
 
         SECTION `.rodata`:CONST:REORDER:NOROOT(2)
         DATA
 ?_1:
-        DC8 "\015\012*****Tempurate init finished!*****\012\015"
-        DC8 0
+        DC8 "\015\012*****Tempetuarate init finished!*****\012\015"
+        DC8 0, 0
 
         SECTION `.rodata`:CONST:REORDER:NOROOT(2)
         DATA
@@ -159,12 +151,12 @@ main:
         END
 // 
 //   4 bytes in section .bss
-// 108 bytes in section .rodata
-// 244 bytes in section .text
+// 116 bytes in section .rodata
+// 204 bytes in section .text
 // 
-// 244 bytes of CODE  memory
-// 108 bytes of CONST memory
+// 204 bytes of CODE  memory
+// 116 bytes of CONST memory
 //   4 bytes of DATA  memory
 //
 //Errors: none
-//Warnings: 4
+//Warnings: 3
