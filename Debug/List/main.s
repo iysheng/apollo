@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// IAR ANSI C/C++ Compiler V8.11.1.13263/W32 for ARM      26/Apr/2017  11:22:25
+// IAR ANSI C/C++ Compiler V8.11.1.13263/W32 for ARM      26/Apr/2017  14:02:57
 // Copyright 1999-2017 IAR Systems AB.
 //
 //    Cpu mode     =  thumb
 //    Endian       =  little
 //    Source file  =  D:\Apollo\gpio\main.c
 //    Command line =  
-//        -f C:\Users\iysheng\AppData\Local\Temp\EW167C.tmp
+//        -f C:\Users\iysheng\AppData\Local\Temp\EW12A3.tmp
 //        (D:\Apollo\gpio\main.c -D STM32F767xx -lb D:\Apollo\gpio\Debug\List
 //        -o D:\Apollo\gpio\Debug\Obj --no_cse --no_unroll --no_inline
 //        --no_code_motion --no_tbaa --no_clustering --no_scheduling --debug
@@ -26,7 +26,6 @@
         EXTERN HAL_ADC_GetValue
         EXTERN HAL_ADC_PollForConversion
         EXTERN HAL_ADC_Start
-        EXTERN HAL_Delay
         EXTERN HAL_Init
         EXTERN HAL_NVIC_EnableIRQ
         EXTERN HAL_NVIC_SetPriority
@@ -36,6 +35,7 @@
         EXTERN IUART
         EXTERN KEY_init
         EXTERN LED_init
+        EXTERN SystemClock_Config
         EXTERN TIM_init
         EXTERN TPAD_init
         EXTERN UART_init
@@ -59,6 +59,7 @@ main:
         PUSH     {R7,LR}
         MOVS     R0,#+113
         BL       HAL_Init
+        BL       SystemClock_Config
         BL       LED_init
         BL       KEY_init
         MOVS     R0,#+6
@@ -109,8 +110,6 @@ main:
         LDR.N    R1,??main_0+0x28
         ADR.N    R0,??main_0+0x8  ;; 0x25, 0x73, 0x00, 0x00
         BL       printf
-        MOV      R0,#+1000
-        BL       HAL_Delay
         B.N      ??main_1
         DATA
 ??main_0:
@@ -158,9 +157,9 @@ main:
 // 
 //   4 bytes in section .bss
 // 120 bytes in section .rodata
-// 212 bytes in section .text
+// 208 bytes in section .text
 // 
-// 212 bytes of CODE  memory
+// 208 bytes of CODE  memory
 // 120 bytes of CONST memory
 //   4 bytes of DATA  memory
 //

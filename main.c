@@ -6,6 +6,7 @@ extern ADC_HandleTypeDef IADC;
 extern uint8_t rstr[RSTR_SIZE]; 
 extern uint32_t led_flag;
 int sscanf_i = 0;
+
 int main()
 { 
   char stemp[32];
@@ -15,6 +16,7 @@ int main()
   float ftemp;
   
   HAL_Init();
+  SystemClock_Config();//APB1:54MHZ APB2:108MHZ AHB:216MHZ
   LED_init();  
   KEY_init();
   HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_1);
@@ -33,10 +35,7 @@ int main()
   printf("\r\n*****Welocome to Apollo's world!*****\n\r");
   TPAD_init();
   printf("\r\n*****Tempetuarate&TIM2 init finished!*****\n\r");
-  //LED_on();
-  //HAL_Delay(1000);//延时1000ms
-  //LED_off();
-  HAL_ADC_Start(&IADC);//准换开始
+  HAL_ADC_Start(&IADC);//转换开始
   
   while(1){
   HAL_ADC_PollForConversion(&IADC,HAL_MAX_DELAY);
@@ -45,7 +44,7 @@ int main()
   //ftemp=((ftemp-760.0)/2.5)+25;
   sprintf((char *)rstr,"tempture is %f**%d.\n\r",ftemp,led_flag);
   printf("%s",rstr);
-  HAL_Delay(1000);  
+  //HAL_Delay(1000);  
   /*scanf("%s",stemp);
   printf("%s",stemp);
   memset(stemp, 0, strlen(stemp));*/
