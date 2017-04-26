@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// IAR ANSI C/C++ Compiler V8.11.1.13263/W32 for ARM      26/Apr/2017  14:02:57
+// IAR ANSI C/C++ Compiler V8.11.1.13263/W32 for ARM      26/Apr/2017  15:55:44
 // Copyright 1999-2017 IAR Systems AB.
 //
 //    Cpu mode     =  thumb
 //    Endian       =  little
 //    Source file  =  D:\Apollo\gpio\main.c
 //    Command line =  
-//        -f C:\Users\iysheng\AppData\Local\Temp\EW12A3.tmp
+//        -f C:\Users\iysheng\AppData\Local\Temp\EW523E.tmp
 //        (D:\Apollo\gpio\main.c -D STM32F767xx -lb D:\Apollo\gpio\Debug\List
 //        -o D:\Apollo\gpio\Debug\Obj --no_cse --no_unroll --no_inline
 //        --no_code_motion --no_tbaa --no_clustering --no_scheduling --debug
@@ -36,10 +36,10 @@
         EXTERN KEY_init
         EXTERN LED_init
         EXTERN SystemClock_Config
+        EXTERN SystemCoreClock
+        EXTERN TEMP_init
         EXTERN TIM_init
-        EXTERN TPAD_init
         EXTERN UART_init
-        EXTERN led_flag
         EXTERN printf
         EXTERN rstr
         EXTERN sprintf
@@ -57,7 +57,6 @@ sscanf_i:
         THUMB
 main:
         PUSH     {R7,LR}
-        MOVS     R0,#+113
         BL       HAL_Init
         BL       SystemClock_Config
         BL       LED_init
@@ -76,52 +75,62 @@ main:
         MOVS     R1,#+0
         MOVS     R0,#+9
         BL       HAL_NVIC_SetPriority
-        LDR.N    R0,??main_0+0xC
+        LDR.N    R0,??main_0+0x4
         BL       UART_init
-        LDR.N    R0,??main_0+0x10
+        LDR.N    R0,??main_0+0x8
         BL       TIM_init
+        LDR.N    R0,??main_0+0xC
+        BL       printf
+        BL       TEMP_init
+        LDR.N    R0,??main_0+0x10
+        BL       printf
         LDR.N    R0,??main_0+0x14
-        BL       printf
-        BL       TPAD_init
-        LDR.N    R0,??main_0+0x18
-        BL       printf
-        LDR.N    R0,??main_0+0x1C
         BL       HAL_ADC_Start
 ??main_1:
         MOVS     R1,#-1
-        LDR.N    R0,??main_0+0x1C
+        LDR.N    R0,??main_0+0x14
         BL       HAL_ADC_PollForConversion
-        LDR.N    R0,??main_0+0x1C
+        LDR.N    R0,??main_0+0x14
         BL       HAL_ADC_GetValue
         VMOV     S0,R0
         VCVT.F32.U32 S0,S0
-        VLDR.W   S1,??main_0      ;; 0x457ff000
+        VLDR.W   S1,??main_0+0x18  ;; 0x457ff000
         VDIV.F32 S0,S0,S1
-        VLDR.W   S1,??main_0+0x4  ;; 0x454e4000
+        VLDR.W   S1,??main_0+0x1C  ;; 0x454e4000
         VMUL.F32 S0,S0,S1
-        LDR.N    R0,??main_0+0x20
+        VCVT.F64.F32 D0,S0
+        VLDR.W   D2,??main_0+0x20
+        VADD.F64 D0,D0,D2
+        VMOV.F64 D2,#2.5
+        VDIV.F64 D0,D0,D2
+        VMOV.F64 D2,#25.0
+        VADD.F64 D0,D0,D2
+        VCVT.F32.F64 S0,D0
+        LDR.N    R0,??main_0+0x28
         LDR      R0,[R0, #+0]
         STR      R0,[SP, #+0]
         VCVT.F64.F32 D0,S0
         VMOV     R2,R3,D0
-        LDR.N    R1,??main_0+0x24
-        LDR.N    R0,??main_0+0x28
+        LDR.N    R1,??main_0+0x2C
+        LDR.N    R0,??main_0+0x30
         BL       sprintf
-        LDR.N    R1,??main_0+0x28
-        ADR.N    R0,??main_0+0x8  ;; 0x25, 0x73, 0x00, 0x00
+        LDR.N    R1,??main_0+0x30
+        ADR.N    R0,??main_0      ;; 0x25, 0x73, 0x00, 0x00
         BL       printf
         B.N      ??main_1
+        Nop      
         DATA
 ??main_0:
-        DC32     0x457ff000
-        DC32     0x454e4000
         DC8      0x25, 0x73, 0x00, 0x00
         DC32     IUART
         DC32     ITIM
         DC32     ?_0
         DC32     ?_1
         DC32     IADC
-        DC32     led_flag
+        DC32     0x457ff000
+        DC32     0x454e4000
+        DC32     0x0,0xC087C000
+        DC32     SystemCoreClock
         DC32     ?_2
         DC32     rstr
 
@@ -145,8 +154,8 @@ main:
         SECTION `.rodata`:CONST:REORDER:NOROOT(2)
         DATA
 ?_2:
-        DC8 "tempture is %f**%d.\012\015"
-        DC8 0, 0
+        DC8 "tem=%f**sclk=%d.\012\015"
+        DC8 0
 
         SECTION `.rodata`:CONST:REORDER:NOROOT(2)
         DATA
@@ -156,12 +165,12 @@ main:
         END
 // 
 //   4 bytes in section .bss
-// 120 bytes in section .rodata
-// 208 bytes in section .text
+// 116 bytes in section .rodata
+// 248 bytes in section .text
 // 
-// 208 bytes of CODE  memory
-// 120 bytes of CONST memory
+// 248 bytes of CODE  memory
+// 116 bytes of CONST memory
 //   4 bytes of DATA  memory
 //
 //Errors: none
-//Warnings: 3
+//Warnings: none
