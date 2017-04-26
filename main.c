@@ -1,8 +1,10 @@
 #include "apollo.h"
 
 extern UART_HandleTypeDef IUART;
+extern TIM_HandleTypeDef ITIM;
 extern ADC_HandleTypeDef IADC;
-extern uint8_t rstr[RSTR_SIZE];  
+extern uint8_t rstr[RSTR_SIZE]; 
+extern uint32_t led_flag;
 int sscanf_i = 0;
 int main()
 { 
@@ -22,14 +24,15 @@ int main()
   HAL_NVIC_SetPriority(EXTI3_IRQn, 0x0, 1);
 
   UART_init(&IUART);
+  TIM_init(&ITIM);
   //HAL_NVIC_EnableIRQ(USART2_IRQn);
   //HAL_NVIC_SetPriority(USART2_IRQn, 0x0, 0); 
-  LED_on();
-  HAL_Delay(1000);//—” ±1000ms
+  //LED_on();
+  //HAL_Delay(1000);//—” ±1000ms
   /* Output a message on Hyperterminal using printf function */
   printf("\r\n*****Welocome to Apollo's world!*****\n\r");
   TPAD_init();
-  printf("\r\n*****Tempetuarate init finished!*****\n\r");
+  printf("\r\n*****Tempetuarate&TIM2 init finished!*****\n\r");
   //LED_on();
   //HAL_Delay(1000);//—” ±1000ms
   //LED_off();
@@ -40,7 +43,7 @@ int main()
   uitemp=HAL_ADC_GetValue(&IADC);
   ftemp=((float)uitemp)/4095*3300;
   //ftemp=((ftemp-760.0)/2.5)+25;
-  sprintf((char *)rstr,"the tempture is %f.\n\r",ftemp);
+  sprintf((char *)rstr,"tempture is %f**%d.\n\r",ftemp,led_flag);
   printf("%s",rstr);
   HAL_Delay(1000);  
   /*scanf("%s",stemp);

@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// IAR ANSI C/C++ Compiler V8.11.1.13263/W32 for ARM      24/Apr/2017  16:32:57
+// IAR ANSI C/C++ Compiler V8.11.1.13263/W32 for ARM      26/Apr/2017  11:22:25
 // Copyright 1999-2017 IAR Systems AB.
 //
 //    Cpu mode     =  thumb
 //    Endian       =  little
 //    Source file  =  D:\Apollo\gpio\main.c
 //    Command line =  
-//        -f C:\Users\iysheng\AppData\Local\Temp\EWF258.tmp
+//        -f C:\Users\iysheng\AppData\Local\Temp\EW167C.tmp
 //        (D:\Apollo\gpio\main.c -D STM32F767xx -lb D:\Apollo\gpio\Debug\List
 //        -o D:\Apollo\gpio\Debug\Obj --no_cse --no_unroll --no_inline
 //        --no_code_motion --no_tbaa --no_clustering --no_scheduling --debug
@@ -32,12 +32,14 @@
         EXTERN HAL_NVIC_SetPriority
         EXTERN HAL_NVIC_SetPriorityGrouping
         EXTERN IADC
+        EXTERN ITIM
         EXTERN IUART
         EXTERN KEY_init
         EXTERN LED_init
-        EXTERN LED_on
+        EXTERN TIM_init
         EXTERN TPAD_init
         EXTERN UART_init
+        EXTERN led_flag
         EXTERN printf
         EXTERN rstr
         EXTERN sprintf
@@ -75,21 +77,20 @@ main:
         BL       HAL_NVIC_SetPriority
         LDR.N    R0,??main_0+0xC
         BL       UART_init
-        BL       LED_on
-        MOV      R0,#+1000
-        BL       HAL_Delay
         LDR.N    R0,??main_0+0x10
-        BL       printf
-        BL       TPAD_init
+        BL       TIM_init
         LDR.N    R0,??main_0+0x14
         BL       printf
+        BL       TPAD_init
         LDR.N    R0,??main_0+0x18
+        BL       printf
+        LDR.N    R0,??main_0+0x1C
         BL       HAL_ADC_Start
 ??main_1:
         MOVS     R1,#-1
-        LDR.N    R0,??main_0+0x18
+        LDR.N    R0,??main_0+0x1C
         BL       HAL_ADC_PollForConversion
-        LDR.N    R0,??main_0+0x18
+        LDR.N    R0,??main_0+0x1C
         BL       HAL_ADC_GetValue
         VMOV     S0,R0
         VCVT.F32.U32 S0,S0
@@ -97,12 +98,15 @@ main:
         VDIV.F32 S0,S0,S1
         VLDR.W   S1,??main_0+0x4  ;; 0x454e4000
         VMUL.F32 S0,S0,S1
+        LDR.N    R0,??main_0+0x20
+        LDR      R0,[R0, #+0]
+        STR      R0,[SP, #+0]
         VCVT.F64.F32 D0,S0
         VMOV     R2,R3,D0
-        LDR.N    R1,??main_0+0x1C
-        LDR.N    R0,??main_0+0x20
+        LDR.N    R1,??main_0+0x24
+        LDR.N    R0,??main_0+0x28
         BL       sprintf
-        LDR.N    R1,??main_0+0x20
+        LDR.N    R1,??main_0+0x28
         ADR.N    R0,??main_0+0x8  ;; 0x25, 0x73, 0x00, 0x00
         BL       printf
         MOV      R0,#+1000
@@ -114,9 +118,11 @@ main:
         DC32     0x454e4000
         DC8      0x25, 0x73, 0x00, 0x00
         DC32     IUART
+        DC32     ITIM
         DC32     ?_0
         DC32     ?_1
         DC32     IADC
+        DC32     led_flag
         DC32     ?_2
         DC32     rstr
 
@@ -134,13 +140,13 @@ main:
         SECTION `.rodata`:CONST:REORDER:NOROOT(2)
         DATA
 ?_1:
-        DC8 "\015\012*****Tempetuarate init finished!*****\012\015"
-        DC8 0, 0
+        DC8 "\015\012*****Tempetuarate&TIM2 init finished!*****\012\015"
+        DC8 0
 
         SECTION `.rodata`:CONST:REORDER:NOROOT(2)
         DATA
 ?_2:
-        DC8 "the tempture is %f.\012\015"
+        DC8 "tempture is %f**%d.\012\015"
         DC8 0, 0
 
         SECTION `.rodata`:CONST:REORDER:NOROOT(2)
@@ -151,11 +157,11 @@ main:
         END
 // 
 //   4 bytes in section .bss
-// 116 bytes in section .rodata
-// 204 bytes in section .text
+// 120 bytes in section .rodata
+// 212 bytes in section .text
 // 
-// 204 bytes of CODE  memory
-// 116 bytes of CONST memory
+// 212 bytes of CODE  memory
+// 120 bytes of CONST memory
 //   4 bytes of DATA  memory
 //
 //Errors: none

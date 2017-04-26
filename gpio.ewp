@@ -2064,6 +2064,12 @@
             <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal_rcc.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal_tim.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal_tim_ex.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal_uart.c</name>
         </file>
         <file>
