@@ -983,7 +983,7 @@
                     <item>huart-&gt;Init</item>
                     <item>rstr</item>
                     <item>led_flag</item>
-                    <item></item>
+                    <item />
                 </expressions>
                 <col-names>
                     <item>Expression</item>

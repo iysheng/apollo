@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// IAR ANSI C/C++ Compiler V8.11.1.13263/W32 for ARM      26/Apr/2017  15:55:44
+// IAR ANSI C/C++ Compiler V8.11.1.13263/W32 for ARM      27/Apr/2017  09:54:58
 // Copyright 1999-2017 IAR Systems AB.
 //
 //    Cpu mode     =  thumb
 //    Endian       =  little
 //    Source file  =  D:\Apollo\gpio\main.c
 //    Command line =  
-//        -f C:\Users\iysheng\AppData\Local\Temp\EW523E.tmp
+//        -f C:\Users\iysheng\AppData\Local\Temp\EWA2F8.tmp
 //        (D:\Apollo\gpio\main.c -D STM32F767xx -lb D:\Apollo\gpio\Debug\List
 //        -o D:\Apollo\gpio\Debug\Obj --no_cse --no_unroll --no_inline
 //        --no_code_motion --no_tbaa --no_clustering --no_scheduling --debug
@@ -26,19 +26,23 @@
         EXTERN HAL_ADC_GetValue
         EXTERN HAL_ADC_PollForConversion
         EXTERN HAL_ADC_Start
+        EXTERN HAL_Delay
         EXTERN HAL_Init
         EXTERN HAL_NVIC_EnableIRQ
         EXTERN HAL_NVIC_SetPriority
         EXTERN HAL_NVIC_SetPriorityGrouping
+        EXTERN HAL_TIM_PWM_ConfigChannel
+        EXTERN HAL_TIM_PWM_Start
         EXTERN IADC
+        EXTERN IConfig
         EXTERN ITIM
         EXTERN IUART
         EXTERN KEY_init
         EXTERN LED_init
+        EXTERN PWM_init
         EXTERN SystemClock_Config
         EXTERN SystemCoreClock
         EXTERN TEMP_init
-        EXTERN TIM_init
         EXTERN UART_init
         EXTERN printf
         EXTERN rstr
@@ -77,44 +81,68 @@ main:
         BL       HAL_NVIC_SetPriority
         LDR.N    R0,??main_0+0x4
         BL       UART_init
+        MOVS     R2,#+12
+        LDR.N    R1,??main_0+0x14
+        LDR.N    R0,??main_0+0x10
+        BL       PWM_init
         LDR.N    R0,??main_0+0x8
-        BL       TIM_init
-        LDR.N    R0,??main_0+0xC
         BL       printf
         BL       TEMP_init
-        LDR.N    R0,??main_0+0x10
+        LDR.N    R0,??main_0+0xC
         BL       printf
-        LDR.N    R0,??main_0+0x14
+        LDR.N    R0,??main_0+0x18
         BL       HAL_ADC_Start
 ??main_1:
+        LDR.N    R0,??main_0+0x14
+        LDR      R0,[R0, #+4]
+        ADDS     R0,R0,#+1
+        LDR.N    R1,??main_0+0x14
+        STR      R0,[R1, #+4]
+        MOVS     R2,#+12
+        LDR.N    R1,??main_0+0x14
+        LDR.N    R0,??main_0+0x10
+        BL       HAL_TIM_PWM_ConfigChannel
+        MOVS     R1,#+12
+        LDR.N    R0,??main_0+0x10
+        BL       HAL_TIM_PWM_Start
+        LDR.N    R0,??main_0+0x14
+        LDR      R0,[R0, #+4]
+        CMP      R0,#+196
+        BCC.N    ??main_2
+        MOVS     R0,#+1
+        LDR.N    R1,??main_0+0x14
+        STR      R0,[R1, #+4]
+??main_2:
+        MOVS     R0,#+10
+        BL       HAL_Delay
         MOVS     R1,#-1
-        LDR.N    R0,??main_0+0x14
+        LDR.N    R0,??main_0+0x18
         BL       HAL_ADC_PollForConversion
-        LDR.N    R0,??main_0+0x14
+        LDR.N    R0,??main_0+0x18
         BL       HAL_ADC_GetValue
         VMOV     S0,R0
         VCVT.F32.U32 S0,S0
-        VLDR.W   S1,??main_0+0x18  ;; 0x457ff000
+        VLDR.W   S1,??main_0+0x1C  ;; 0x457ff000
         VDIV.F32 S0,S0,S1
-        VLDR.W   S1,??main_0+0x1C  ;; 0x454e4000
+        VLDR.W   S1,??main_0+0x20  ;; 0x454e4000
         VMUL.F32 S0,S0,S1
         VCVT.F64.F32 D0,S0
-        VLDR.W   D2,??main_0+0x20
+        VLDR.W   D2,??main_0+0x24
         VADD.F64 D0,D0,D2
         VMOV.F64 D2,#2.5
         VDIV.F64 D0,D0,D2
         VMOV.F64 D2,#25.0
         VADD.F64 D0,D0,D2
         VCVT.F32.F64 S0,D0
-        LDR.N    R0,??main_0+0x28
+        LDR.N    R0,??main_0+0x2C
         LDR      R0,[R0, #+0]
         STR      R0,[SP, #+0]
         VCVT.F64.F32 D0,S0
         VMOV     R2,R3,D0
-        LDR.N    R1,??main_0+0x2C
-        LDR.N    R0,??main_0+0x30
-        BL       sprintf
         LDR.N    R1,??main_0+0x30
+        LDR.N    R0,??main_0+0x34
+        BL       sprintf
+        LDR.N    R1,??main_0+0x34
         ADR.N    R0,??main_0      ;; 0x25, 0x73, 0x00, 0x00
         BL       printf
         B.N      ??main_1
@@ -123,9 +151,10 @@ main:
 ??main_0:
         DC8      0x25, 0x73, 0x00, 0x00
         DC32     IUART
-        DC32     ITIM
         DC32     ?_0
         DC32     ?_1
+        DC32     ITIM
+        DC32     IConfig
         DC32     IADC
         DC32     0x457ff000
         DC32     0x454e4000
@@ -166,9 +195,9 @@ main:
 // 
 //   4 bytes in section .bss
 // 116 bytes in section .rodata
-// 248 bytes in section .text
+// 304 bytes in section .text
 // 
-// 248 bytes of CODE  memory
+// 304 bytes of CODE  memory
 // 116 bytes of CONST memory
 //   4 bytes of DATA  memory
 //

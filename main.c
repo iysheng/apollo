@@ -2,6 +2,7 @@
 
 extern UART_HandleTypeDef IUART;
 extern TIM_HandleTypeDef ITIM;
+extern TIM_OC_InitTypeDef IConfig;
 extern ADC_HandleTypeDef IADC;
 extern uint8_t rstr[RSTR_SIZE]; 
 extern uint32_t led_flag;
@@ -25,7 +26,8 @@ int main()
   HAL_NVIC_SetPriority(EXTI3_IRQn, 0x0, 1);
 
   UART_init(&IUART);
-  TIM_init(&ITIM);
+  //TIM_init(&ITIM);
+  PWM_init(&ITIM,&IConfig,TIM_CHANNEL_4);
   //HAL_NVIC_EnableIRQ(USART2_IRQn);
   //HAL_NVIC_SetPriority(USART2_IRQn, 0x0, 0); 
   //LED_on();
@@ -37,6 +39,12 @@ int main()
   HAL_ADC_Start(&IADC);//×ª»»¿ªÊ¼
   
   while(1){
+  (IConfig.Pulse)++;
+  HAL_TIM_PWM_ConfigChannel(&ITIM,&IConfig,TIM_CHANNEL_4);
+  HAL_TIM_PWM_Start(&ITIM,TIM_CHANNEL_4);  
+  if(IConfig.Pulse>195)
+    IConfig.Pulse=1;
+  HAL_Delay(10);    
   HAL_ADC_PollForConversion(&IADC,HAL_MAX_DELAY);
   uitemp=HAL_ADC_GetValue(&IADC);
   ftemp=((float)uitemp)/4095*3300;
