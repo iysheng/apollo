@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// IAR ANSI C/C++ Compiler V8.11.1.13263/W32 for ARM      27/Apr/2017  09:54:58
+// IAR ANSI C/C++ Compiler V8.11.1.13263/W32 for ARM      27/Apr/2017  11:33:56
 // Copyright 1999-2017 IAR Systems AB.
 //
 //    Cpu mode     =  thumb
 //    Endian       =  little
 //    Source file  =  D:\Apollo\gpio\main.c
 //    Command line =  
-//        -f C:\Users\iysheng\AppData\Local\Temp\EWA2F8.tmp
+//        -f C:\Users\iysheng\AppData\Local\Temp\EW3DD8.tmp
 //        (D:\Apollo\gpio\main.c -D STM32F767xx -lb D:\Apollo\gpio\Debug\List
 //        -o D:\Apollo\gpio\Debug\Obj --no_cse --no_unroll --no_inline
 //        --no_code_motion --no_tbaa --no_clustering --no_scheduling --debug
@@ -23,27 +23,25 @@
 
         #define SHT_PROGBITS 0x1
 
-        EXTERN HAL_ADC_GetValue
-        EXTERN HAL_ADC_PollForConversion
         EXTERN HAL_ADC_Start
-        EXTERN HAL_Delay
         EXTERN HAL_Init
         EXTERN HAL_NVIC_EnableIRQ
         EXTERN HAL_NVIC_SetPriority
         EXTERN HAL_NVIC_SetPriorityGrouping
-        EXTERN HAL_TIM_PWM_ConfigChannel
-        EXTERN HAL_TIM_PWM_Start
         EXTERN IADC
-        EXTERN IConfig
-        EXTERN ITIM
+        EXTERN IC_Config
+        EXTERN IC_init
+        EXTERN ITIM5
         EXTERN IUART
         EXTERN KEY_init
         EXTERN LED_init
-        EXTERN PWM_init
         EXTERN SystemClock_Config
-        EXTERN SystemCoreClock
         EXTERN TEMP_init
         EXTERN UART_init
+        EXTERN __aeabi_uldivmod
+        EXTERN hole_ic_value
+        EXTERN ic_state
+        EXTERN ic_value
         EXTERN printf
         EXTERN rstr
         EXTERN sprintf
@@ -60,7 +58,8 @@ sscanf_i:
         SECTION `.text`:CODE:NOROOT(2)
         THUMB
 main:
-        PUSH     {R7,LR}
+        PUSH     {LR}
+        SUB      SP,SP,#+12
         BL       HAL_Init
         BL       SystemClock_Config
         BL       LED_init
@@ -81,85 +80,78 @@ main:
         BL       HAL_NVIC_SetPriority
         LDR.N    R0,??main_0+0x4
         BL       UART_init
-        MOVS     R2,#+12
-        LDR.N    R1,??main_0+0x14
+        MOVS     R2,#+0
+        LDR.N    R1,??main_0+0x8
+        LDR.N    R0,??main_0+0xC
+        BL       IC_init
         LDR.N    R0,??main_0+0x10
-        BL       PWM_init
-        LDR.N    R0,??main_0+0x8
         BL       printf
         BL       TEMP_init
-        LDR.N    R0,??main_0+0xC
+        LDR.N    R0,??main_0+0x14
         BL       printf
         LDR.N    R0,??main_0+0x18
         BL       HAL_ADC_Start
 ??main_1:
-        LDR.N    R0,??main_0+0x14
-        LDR      R0,[R0, #+4]
-        ADDS     R0,R0,#+1
-        LDR.N    R1,??main_0+0x14
-        STR      R0,[R1, #+4]
-        MOVS     R2,#+12
-        LDR.N    R1,??main_0+0x14
-        LDR.N    R0,??main_0+0x10
-        BL       HAL_TIM_PWM_ConfigChannel
-        MOVS     R1,#+12
-        LDR.N    R0,??main_0+0x10
-        BL       HAL_TIM_PWM_Start
-        LDR.N    R0,??main_0+0x14
-        LDR      R0,[R0, #+4]
-        CMP      R0,#+196
-        BCC.N    ??main_2
-        MOVS     R0,#+1
-        LDR.N    R1,??main_0+0x14
-        STR      R0,[R1, #+4]
-??main_2:
-        MOVS     R0,#+10
-        BL       HAL_Delay
+        LDR.N    R0,??main_0+0x1C
+        LDRB     R0,[R0, #+0]
+        LSLS     R0,R0,#+24
+        BPL.N    ??main_1
+        LDR.N    R0,??main_0+0x1C
+        LDRB     R0,[R0, #+0]
+        ANDS     R0,R0,#0x3F
+        LDR.N    R1,??main_0+0x1C
+        STRB     R0,[R1, #+0]
+        LDR.N    R0,??main_0+0x1C
+        LDRB     R0,[R0, #+0]
         MOVS     R1,#-1
-        LDR.N    R0,??main_0+0x18
-        BL       HAL_ADC_PollForConversion
-        LDR.N    R0,??main_0+0x18
-        BL       HAL_ADC_GetValue
-        VMOV     S0,R0
-        VCVT.F32.U32 S0,S0
-        VLDR.W   S1,??main_0+0x1C  ;; 0x457ff000
-        VDIV.F32 S0,S0,S1
-        VLDR.W   S1,??main_0+0x20  ;; 0x454e4000
-        VMUL.F32 S0,S0,S1
-        VCVT.F64.F32 D0,S0
-        VLDR.W   D2,??main_0+0x24
-        VADD.F64 D0,D0,D2
-        VMOV.F64 D2,#2.5
-        VDIV.F64 D0,D0,D2
-        VMOV.F64 D2,#25.0
-        VADD.F64 D0,D0,D2
-        VCVT.F32.F64 S0,D0
-        LDR.N    R0,??main_0+0x2C
+        MULS     R0,R1,R0
+        MOVS     R1,#+0
+        LDR.N    R2,??main_0+0x20
+        STRD     R0,R1,[R2, #+0]
+        LDR.N    R0,??main_0+0x20
+        LDRD     R2,R3,[R0, #+0]
+        LDR.N    R0,??main_0+0x24
         LDR      R0,[R0, #+0]
-        STR      R0,[SP, #+0]
-        VCVT.F64.F32 D0,S0
-        VMOV     R2,R3,D0
-        LDR.N    R1,??main_0+0x30
-        LDR.N    R0,??main_0+0x34
+        MOVS     R1,#+0
+        ADDS     R0,R2,R0
+        ADCS     R1,R3,R1
+        LDR.N    R2,??main_0+0x20
+        STRD     R0,R1,[R2, #+0]
+        LDR.N    R0,??main_0+0x20
+        LDRD     R0,R1,[R0, #+0]
+        MOV      R2,#+1000
+        MOVS     R3,#+0
+        BL       __aeabi_uldivmod
+        LDR.N    R1,??main_0+0x24
+        STR      R0,[R1, #+0]
+        LDR.N    R0,??main_0+0x20
+        LDRD     R0,R1,[R0, #+0]
+        STRD     R0,R1,[SP, #+0]
+        LDR.N    R0,??main_0+0x24
+        LDR      R2,[R0, #+0]
+        LDR.N    R1,??main_0+0x28
+        LDR.N    R0,??main_0+0x2C
         BL       sprintf
-        LDR.N    R1,??main_0+0x34
+        LDR.N    R1,??main_0+0x2C
         ADR.N    R0,??main_0      ;; 0x25, 0x73, 0x00, 0x00
         BL       printf
+        MOVS     R0,#+0
+        LDR.N    R1,??main_0+0x1C
+        STRB     R0,[R1, #+0]
         B.N      ??main_1
         Nop      
         DATA
 ??main_0:
         DC8      0x25, 0x73, 0x00, 0x00
         DC32     IUART
+        DC32     IC_Config
+        DC32     ITIM5
         DC32     ?_0
         DC32     ?_1
-        DC32     ITIM
-        DC32     IConfig
         DC32     IADC
-        DC32     0x457ff000
-        DC32     0x454e4000
-        DC32     0x0,0xC087C000
-        DC32     SystemCoreClock
+        DC32     ic_state
+        DC32     hole_ic_value
+        DC32     ic_value
         DC32     ?_2
         DC32     rstr
 
@@ -183,8 +175,7 @@ main:
         SECTION `.rodata`:CONST:REORDER:NOROOT(2)
         DATA
 ?_2:
-        DC8 "tem=%f**sclk=%d.\012\015"
-        DC8 0
+        DC8 "value=%dms,hole_value=%lldus.\012\015"
 
         SECTION `.rodata`:CONST:REORDER:NOROOT(2)
         DATA
@@ -194,12 +185,12 @@ main:
         END
 // 
 //   4 bytes in section .bss
-// 116 bytes in section .rodata
-// 304 bytes in section .text
+// 128 bytes in section .rodata
+// 264 bytes in section .text
 // 
-// 304 bytes of CODE  memory
-// 116 bytes of CONST memory
+// 264 bytes of CODE  memory
+// 128 bytes of CONST memory
 //   4 bytes of DATA  memory
 //
 //Errors: none
-//Warnings: none
+//Warnings: 2
