@@ -14,11 +14,14 @@ extern uint8_t ic_state;
 extern uint32_t SystemCoreClock;//该系统变量实时等于系统时钟sysclock
 int sscanf_i = 0;
 
+//uint8_t mpudata[128] __attribute__((at(0x20002000)));
+uint8_t *mpudata=(uint8_t *)(0x20002000);
+uint8_t * mpup;
 int main()
 { 
   uint32_t uitemp;
   float ftemp;
-  
+  mpup=mpudata;
   HAL_Init();
   //CPU_CACHE_Enable();
   SystemClock_Config();//APB1:54MHZ APB2:108MHZ AHB:216MHZ
@@ -43,18 +46,26 @@ int main()
   TEMP_init();
   printf("\r\n*****Tempetuarate&TIM2 init finished!*****\n\r");
   HAL_ADC_Start(&IADC);//转换开始
-  
+  mpudata[0]=10;
+  MPU_init();
   while(1){
   if((ic_state&0x80)==0x80)
   {
+    mpudata[0]++;
     ic_state&=0x3f;
     hole_ic_value=ic_state*(0xffffffff);
     hole_ic_value+=ic_value;
     ic_value=hole_ic_value/1000;
     sprintf((char *)rstr,"value=%dms,hole_value=%lldus.\n\r",ic_value,hole_ic_value);
+    MPU_set_protection(0x20002000,10,MPU_REGION_NUMBER0,MPU_REGION_PRIV_RO_URO );
     printf("%s",rstr);
     ic_state=0x00;
   }
+  else
+  {sprintf((char *)rstr,"value=%d.\n\r",mpudata[0]);
+  printf("%s",rstr);}
+  HAL_Delay(1000);
+    
   /*
   (IConfig.Pulse)++;
   HAL_TIM_PWM_ConfigChannel(&ITIM,&IConfig,TIM_CHANNEL_4);
