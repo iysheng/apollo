@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// IAR ANSI C/C++ Compiler V8.11.1.13263/W32 for ARM      27/Apr/2017  18:57:46
+// IAR ANSI C/C++ Compiler V8.11.1.13263/W32 for ARM      28/Apr/2017  20:11:33
 // Copyright 1999-2017 IAR Systems AB.
 //
 //    Cpu mode     =  thumb
 //    Endian       =  little
 //    Source file  =  D:\Apollo\gpio\main.c
 //    Command line =  
-//        -f C:\Users\iysheng\AppData\Local\Temp\EW9609.tmp
+//        -f C:\Users\iysheng\AppData\Local\Temp\EWF56D.tmp
 //        (D:\Apollo\gpio\main.c -D STM32F767xx -lb D:\Apollo\gpio\Debug\List
 //        -o D:\Apollo\gpio\Debug\Obj --no_cse --no_unroll --no_inline
 //        --no_code_motion --no_tbaa --no_clustering --no_scheduling --debug
@@ -23,8 +23,8 @@
 
         #define SHT_PROGBITS 0x1
 
+        EXTERN FMC_SDRAM_WriteBuffer
         EXTERN HAL_ADC_Start
-        EXTERN HAL_Delay
         EXTERN HAL_Init
         EXTERN HAL_NVIC_EnableIRQ
         EXTERN HAL_NVIC_SetPriority
@@ -37,14 +37,10 @@
         EXTERN KEY_init
         EXTERN LED_init
         EXTERN MPU_init
-        EXTERN MPU_set_protection
+        EXTERN SDRAM_init
         EXTERN SystemClock_Config
         EXTERN TEMP_init
         EXTERN UART_init
-        EXTERN __aeabi_uldivmod
-        EXTERN hole_ic_value
-        EXTERN ic_state
-        EXTERN ic_value
         EXTERN printf
         EXTERN rstr
         EXTERN sprintf
@@ -52,6 +48,8 @@
         PUBLIC main
         PUBLIC mpudata
         PUBLIC mpup
+        PUBLIC sdram_test
+        PUBLIC sdramdata
         PUBLIC sscanf_i
 
 
@@ -70,11 +68,20 @@ mpudata:
 mpup:
         DS8 4
 
+        SECTION `.bss`:DATA:REORDER:NOROOT(2)
+        DATA
+sdram_test:
+        DS8 16
+
+        ASEGN `.bss`:DATA:ROOT,0c0000000H
+        DATA
+sdramdata:
+        DS8 16
+
         SECTION `.text`:CODE:NOROOT(2)
         THUMB
 main:
-        PUSH     {LR}
-        SUB      SP,SP,#+12
+        PUSH     {R4,LR}
         LDR.N    R0,??main_0+0x4
         LDR      R0,[R0, #+0]
         LDR.N    R1,??main_0+0x8
@@ -115,81 +122,57 @@ main:
         LDR      R1,[R1, #+0]
         STRB     R0,[R1, #+0]
         BL       MPU_init
+        BL       SDRAM_init
+        MOVS     R4,#+0
+        B.N      ??main_1
+??main_2:
+        MOVS     R0,R4
+        UXTB     R0,R0            ;; ZeroExt  R0,R0,#+24,#+24
+        LSLS     R0,R0,#+1
+        LDR.N    R1,??main_0+0x24
+        STRB     R0,[R1, R4]
+        ADDS     R4,R4,#+1
 ??main_1:
-        LDR.N    R0,??main_0+0x24
-        LDRB     R0,[R0, #+0]
-        LSLS     R0,R0,#+24
-        BMI.N    ??main_2
-??main_3:
-        LDR.N    R0,??main_0+0x4
-        LDR      R0,[R0, #+0]
-        LDRB     R2,[R0, #+0]
+        CMP      R4,#+16
+        BCC.N    ??main_2
+        MOVS     R4,#+0
+        B.N      ??main_3
+??main_4:
+        MOVS     R0,#-1073741824
+        LDRB     R3,[R0, R4]
+        MOVS     R2,R4
         LDR.N    R1,??main_0+0x28
         LDR.N    R0,??main_0+0x2C
         BL       sprintf
         LDR.N    R1,??main_0+0x2C
         ADR.N    R0,??main_0      ;; 0x25, 0x73, 0x00, 0x00
         BL       printf
-        B.N      ??main_4
-??main_2:
-        LDR.N    R0,??main_0+0x4
-        LDR      R0,[R0, #+0]
-        LDRB     R0,[R0, #+0]
-        ADDS     R0,R0,#+1
-        LDR.N    R1,??main_0+0x4
-        LDR      R1,[R1, #+0]
-        STRB     R0,[R1, #+0]
-        LDR.N    R0,??main_0+0x24
-        LDRB     R0,[R0, #+0]
-        ANDS     R0,R0,#0x3F
-        LDR.N    R1,??main_0+0x24
-        STRB     R0,[R1, #+0]
-        LDR.N    R0,??main_0+0x24
-        LDRB     R0,[R0, #+0]
-        MOVS     R1,#-1
-        MULS     R0,R1,R0
+        ADDS     R4,R4,#+1
+??main_3:
+        CMP      R4,#+16
+        BCC.N    ??main_4
+        MOVS     R2,#+16
         MOVS     R1,#+0
-        LDR.N    R2,??main_0+0x30
-        STRD     R0,R1,[R2, #+0]
-        LDR.N    R0,??main_0+0x30
-        LDRD     R2,R3,[R0, #+0]
-        LDR.N    R0,??main_0+0x34
-        LDR      R0,[R0, #+0]
-        MOVS     R1,#+0
-        ADDS     R0,R2,R0
-        ADCS     R1,R3,R1
-        LDR.N    R2,??main_0+0x30
-        STRD     R0,R1,[R2, #+0]
-        LDR.N    R0,??main_0+0x30
-        LDRD     R0,R1,[R0, #+0]
-        MOV      R2,#+1000
-        MOVS     R3,#+0
-        BL       __aeabi_uldivmod
-        LDR.N    R1,??main_0+0x34
-        STR      R0,[R1, #+0]
-        LDR.N    R0,??main_0+0x30
-        LDRD     R0,R1,[R0, #+0]
-        STRD     R0,R1,[SP, #+0]
-        LDR.N    R0,??main_0+0x34
-        LDR      R2,[R0, #+0]
-        LDR.N    R1,??main_0+0x38
+        LDR.N    R0,??main_0+0x24
+        BL       FMC_SDRAM_WriteBuffer
+        MOVS     R4,#+0
+        B.N      ??main_5
+??main_6:
+        MOVS     R0,#-1073741824
+        LDRB     R3,[R0, R4]
+        MOVS     R2,R4
+        LDR.N    R1,??main_0+0x30
         LDR.N    R0,??main_0+0x2C
         BL       sprintf
-        MOVS     R3,#+6
-        MOVS     R2,#+0
-        MOVS     R1,#+10
-        MOVS     R0,#+536879104
-        BL       MPU_set_protection
         LDR.N    R1,??main_0+0x2C
         ADR.N    R0,??main_0      ;; 0x25, 0x73, 0x00, 0x00
         BL       printf
-        MOVS     R0,#+0
-        LDR.N    R1,??main_0+0x24
-        STRB     R0,[R1, #+0]
-??main_4:
-        MOV      R0,#+1000
-        BL       HAL_Delay
-        B.N      ??main_1
+        ADDS     R4,R4,#+1
+??main_5:
+        CMP      R4,#+16
+        BCC.N    ??main_6
+??main_7:
+        B.N      ??main_7
         Nop      
         DATA
 ??main_0:
@@ -202,12 +185,11 @@ main:
         DC32     ?_0
         DC32     ?_1
         DC32     IADC
-        DC32     ic_state
-        DC32     ?_4
-        DC32     rstr
-        DC32     hole_ic_value
-        DC32     ic_value
+        DC32     sdram_test
         DC32     ?_2
+        DC32     rstr
+        DC32     ?_4
+        REQUIRE sdramdata
 
         SECTION `.iar_vfe_header`:DATA:NOALLOC:NOROOT(2)
         SECTION_TYPE SHT_PROGBITS, 0
@@ -229,7 +211,8 @@ main:
         SECTION `.rodata`:CONST:REORDER:NOROOT(2)
         DATA
 ?_2:
-        DC8 "value=%dms,hole_value=%lldus.\012\015"
+        DC8 "beforevalue=%d--%d.\012\015"
+        DC8 0, 0
 
         SECTION `.rodata`:CONST:REORDER:NOROOT(2)
         DATA
@@ -239,18 +222,20 @@ main:
         SECTION `.rodata`:CONST:REORDER:NOROOT(2)
         DATA
 ?_4:
-        DC8 "value=%d.\012\015"
+        DC8 "aftervalue=%d--%d.\012\015"
+        DC8 0, 0, 0
 
         END
 // 
-//   8 bytes in section .bss
+//  24 bytes in section .bss
+//  16 bytes in section .bss    (abs)
 //   4 bytes in section .data
-// 140 bytes in section .rodata
-// 356 bytes in section .text
+// 144 bytes in section .rodata
+// 272 bytes in section .text
 // 
-// 356 bytes of CODE  memory
-// 140 bytes of CONST memory
-//  12 bytes of DATA  memory
+// 272 bytes of CODE  memory
+// 144 bytes of CONST memory
+//  44 bytes of DATA  memory
 //
 //Errors: none
 //Warnings: 2

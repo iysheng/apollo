@@ -2352,6 +2352,9 @@
             <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal_rcc.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal_sdram.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal_tim.c</name>
         </file>
         <file>
@@ -2362,6 +2365,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_it.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_ll_fmc.c</name>
         </file>
     </group>
     <group>
