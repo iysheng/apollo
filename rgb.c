@@ -293,6 +293,7 @@ void LCD_ShowString(uint16_t x,uint16_t y,uint16_t width,uint16_t height,uint8_t
         if(x>=width){x=x0;y+=size;}
         if(y>=height)break;//退出
         LCD_ShowChar(x,y,*p,size,0);
+        //LCD_ShowChar(x,y,*p,size,1);
         x+=size/2;
         p++;
     }  
@@ -403,7 +404,7 @@ void HAL_LTDC_MspInit(LTDC_HandleTypeDef* hltdc)
 *posx,posy:图像的起始点坐标
 *uint8_t* 图像数组收地址
 */
-void APPOLO_RGB(uint16_t posx,uint16_t posy,uint8_t *pic)
+void APPOLO_RGB(uint16_t posx,uint16_t posy,const unsigned char *pic)
 {
  uint32_t width,high,piex,uitemp[2];
  if(pic[0]&0x01)

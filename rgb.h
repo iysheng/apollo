@@ -84,5 +84,6 @@ void LCD_ShowChar(uint16_t x,uint16_t y,uint8_t num,uint8_t size,uint8_t mode);
 void LTDC_Draw_Point(uint16_t x,uint16_t y,uint32_t color);
 void LCD_ShowChar(uint16_t x,uint16_t y,uint8_t num,uint8_t size,uint8_t mode);
 void LCD_ShowString(uint16_t x,uint16_t y,uint16_t width,uint16_t height,uint8_t size,uint8_t *p);
+void APPOLO_RGB(uint16_t posx,uint16_t posy,const unsigned char *pic);
 
 #endif

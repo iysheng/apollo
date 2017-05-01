@@ -21,6 +21,7 @@ extern _ltdc_dev lcdltdc;
 extern uint32_t POINT_COLOR;		//画笔颜色
 extern uint32_t BACK_COLOR;
 extern uint32_t SystemCoreClock;//该系统变量实时等于系统时钟sysclock
+extern uint8_t lcd_led_flag;
 int sscanf_i = 0;
 
 //uint8_t mpudata[128] __attribute__((at(0x20002000)));
@@ -32,8 +33,8 @@ uint8_t * mpup;
 uint8_t sdram_test[16];
 int main()
 { 
-  static uint32_t uitemp[3];
-  static uint16_t piex;
+  uint32_t uitemp;
+  uint16_t uline;
   float ftemp;
   mpup=mpudata;
 
@@ -83,38 +84,37 @@ int main()
   //FMC_SDRAM_ReadBuffer(sdram_test+1,0x00,16);
   //sprintf((char *)rstr,"value=%d--%d.\n\r",sdram_test[0],sdram_test[1]);
   //printf("%s",rstr);
-  BACK_COLOR=BLUE;
-  LTDC_Clear(BLUE);
+  BACK_COLOR=WHITE;
+  LTDC_Clear(WHITE);
   POINT_COLOR=RED;
-  sprintf((char *)rstr,"%s","https://github.com/iysheng/apollo");
-  LCD_ShowString(0,272,10+strlen(rstr)*16,32,32,rstr); 
+  APPOLO_RGB(0,0,gImage_xiong);
+  HAL_Delay(1000);
+  //sprintf((char *)rstr,"%s","https://github.com/iysheng/apollo");
+  //LCD_ShowString(0,272,10+strlen(rstr)*16,32,32,(uint8_t *)rstr); 
 
-    for(uitemp[0]=0;uitemp[0]<240;uitemp[0]++)
-    {
-      for(uitemp[1]=0;uitemp[1]<480;)
-      {
-      //piex=((gImage_xiong[480*uitemp[0]+uitemp[1]]+1)<<8)|(gImage_xiong[480*uitemp[0]+uitemp[1]]);
-      piex=((gImage_xiong[480*uitemp[0]+uitemp[1]])<<8)|(gImage_xiong[480*uitemp[0]+uitemp[1]+1]);
-      LTDC_Draw_Point(uitemp[0],uitemp[1]/2,(uint32_t)(piex));
-      uitemp[1]+=2;
-      }
-    }
-  HAL_Delay(1000);  
-    for(uitemp[0]=0;uitemp[0]<426;uitemp[0]++)
-    {
-      for(uitemp[1]=0;uitemp[1]<480;)
-      {
-      //piex=((gImage_xiong[480*uitemp[0]+uitemp[1]]+1)<<8)|(gImage_xiong[480*uitemp[0]+uitemp[1]]);
-      piex=((gImage_test1[480*uitemp[0]+uitemp[1]])<<8)|(gImage_test1[480*uitemp[0]+uitemp[1]+1]);
-      LTDC_Draw_Point(uitemp[0]+240,uitemp[1]/2,(uint32_t)(piex));
-      uitemp[1]+=2;
-      }
-    }
-HAL_Delay(1000);
-    APPOLO_RGB(0,0,gImage_xiong);
-    while(1)
-  {
+   while(1){
     
+    /*ic_state&=0x3f;
+    hole_ic_value=ic_state*(0xffffffff);
+    hole_ic_value+=ic_value;
+    ic_value=hole_ic_value/1000;
+    ic_state=0x00;*/
+    //sprintf((char *)rstr,"tempture=%f,hole_value=%lldus.\n\r",ftemp,hole_ic_value);    
+    //MPU_set_protection(0x20002000,10,MPU_REGION_NUMBER0,MPU_REGION_PRIV_RO_URO );
+    printf("%s",rstr);
+    switch(uline)
+    {
+    case 0:{sprintf((char *)rstr,"%s","iysheng@163.com");break;}
+    case 1:{sprintf((char *)rstr,"%s","just for fun!");break;}
+    case 2:{sprintf((char *)rstr,"%s","hello china");break;}
+    case 3:{sprintf((char *)rstr,"%d",lcd_led_flag);break;}
+    case 4:{uitemp=HAL_ADC_GetValue(&IADC);ftemp=((float)uitemp)/4095*3300;ftemp=((ftemp-760.0)/2.5)+25;
+    sprintf((char *)rstr,"%0.3f",ftemp);break;}
+    default:break;
+    }
+    LCD_ShowString(120,50+uline*80,strlen(rstr)*16,32,32,(uint8_t *)rstr);
+    uline++;
+    uline%=5;
     HAL_Delay(1000);
   }
   
