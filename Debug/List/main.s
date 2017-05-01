@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// IAR ANSI C/C++ Compiler V8.11.1.13263/W32 for ARM      28/Apr/2017  20:11:33
+// IAR ANSI C/C++ Compiler V8.11.1.13263/W32 for ARM      01/May/2017  09:36:53
 // Copyright 1999-2017 IAR Systems AB.
 //
 //    Cpu mode     =  thumb
 //    Endian       =  little
 //    Source file  =  D:\Apollo\gpio\main.c
 //    Command line =  
-//        -f C:\Users\iysheng\AppData\Local\Temp\EWF56D.tmp
+//        -f C:\Users\iysheng\AppData\Local\Temp\EW264.tmp
 //        (D:\Apollo\gpio\main.c -D STM32F767xx -lb D:\Apollo\gpio\Debug\List
 //        -o D:\Apollo\gpio\Debug\Obj --no_cse --no_unroll --no_inline
 //        --no_code_motion --no_tbaa --no_clustering --no_scheduling --debug
@@ -23,8 +23,9 @@
 
         #define SHT_PROGBITS 0x1
 
-        EXTERN FMC_SDRAM_WriteBuffer
+        EXTERN CPU_CACHE_Enable
         EXTERN HAL_ADC_Start
+        EXTERN HAL_Delay
         EXTERN HAL_Init
         EXTERN HAL_NVIC_EnableIRQ
         EXTERN HAL_NVIC_SetPriority
@@ -35,8 +36,12 @@
         EXTERN ITIM5
         EXTERN IUART
         EXTERN KEY_init
+        EXTERN LCD_Init
+        EXTERN LCD_ShowString
         EXTERN LED_init
+        EXTERN LTDC_Clear
         EXTERN MPU_init
+        EXTERN POINT_COLOR
         EXTERN SDRAM_init
         EXTERN SystemClock_Config
         EXTERN TEMP_init
@@ -44,12 +49,12 @@
         EXTERN printf
         EXTERN rstr
         EXTERN sprintf
+        EXTERN strlen
 
         PUBLIC main
         PUBLIC mpudata
         PUBLIC mpup
         PUBLIC sdram_test
-        PUBLIC sdramdata
         PUBLIC sscanf_i
 
 
@@ -73,20 +78,17 @@ mpup:
 sdram_test:
         DS8 16
 
-        ASEGN `.bss`:DATA:ROOT,0c0000000H
-        DATA
-sdramdata:
-        DS8 16
-
         SECTION `.text`:CODE:NOROOT(2)
         THUMB
 main:
-        PUSH     {R4,LR}
+        PUSH     {LR}
+        SUB      SP,SP,#+12
         LDR.N    R0,??main_0+0x4
         LDR      R0,[R0, #+0]
         LDR.N    R1,??main_0+0x8
         STR      R0,[R1, #+0]
         BL       HAL_Init
+        BL       CPU_CACHE_Enable
         BL       SystemClock_Config
         BL       LED_init
         BL       KEY_init
@@ -123,57 +125,33 @@ main:
         STRB     R0,[R1, #+0]
         BL       MPU_init
         BL       SDRAM_init
-        MOVS     R4,#+0
-        B.N      ??main_1
-??main_2:
-        MOVS     R0,R4
-        UXTB     R0,R0            ;; ZeroExt  R0,R0,#+24,#+24
-        LSLS     R0,R0,#+1
-        LDR.N    R1,??main_0+0x24
-        STRB     R0,[R1, R4]
-        ADDS     R4,R4,#+1
+        BL       LCD_Init
+        MOVS     R0,#+31
+        BL       LTDC_Clear
 ??main_1:
-        CMP      R4,#+16
-        BCC.N    ??main_2
-        MOVS     R4,#+0
-        B.N      ??main_3
-??main_4:
-        MOVS     R0,#-1073741824
-        LDRB     R3,[R0, R4]
-        MOVS     R2,R4
-        LDR.N    R1,??main_0+0x28
+        MOV      R0,#+63488
+        LDR.N    R1,??main_0+0x24
+        STR      R0,[R1, #+0]
+        LDR.N    R2,??main_0+0x28
+        ADR.N    R1,??main_0      ;; 0x25, 0x73, 0x00, 0x00
         LDR.N    R0,??main_0+0x2C
         BL       sprintf
-        LDR.N    R1,??main_0+0x2C
-        ADR.N    R0,??main_0      ;; 0x25, 0x73, 0x00, 0x00
-        BL       printf
-        ADDS     R4,R4,#+1
-??main_3:
-        CMP      R4,#+16
-        BCC.N    ??main_4
-        MOVS     R2,#+16
-        MOVS     R1,#+0
-        LDR.N    R0,??main_0+0x24
-        BL       FMC_SDRAM_WriteBuffer
-        MOVS     R4,#+0
-        B.N      ??main_5
-??main_6:
-        MOVS     R0,#-1073741824
-        LDRB     R3,[R0, R4]
-        MOVS     R2,R4
-        LDR.N    R1,??main_0+0x30
         LDR.N    R0,??main_0+0x2C
-        BL       sprintf
+        BL       strlen
         LDR.N    R1,??main_0+0x2C
-        ADR.N    R0,??main_0      ;; 0x25, 0x73, 0x00, 0x00
-        BL       printf
-        ADDS     R4,R4,#+1
-??main_5:
-        CMP      R4,#+16
-        BCC.N    ??main_6
-??main_7:
-        B.N      ??main_7
-        Nop      
+        STR      R1,[SP, #+4]
+        MOVS     R1,#+32
+        STR      R1,[SP, #+0]
+        MOVS     R3,#+32
+        LSLS     R2,R0,#+4
+        ADDS     R2,R2,#+10
+        UXTH     R2,R2            ;; ZeroExt  R2,R2,#+16,#+16
+        MOVS     R1,#+40
+        MOVS     R0,#+10
+        BL       LCD_ShowString
+        MOV      R0,#+1000
+        BL       HAL_Delay
+        B.N      ??main_1
         DATA
 ??main_0:
         DC8      0x25, 0x73, 0x00, 0x00
@@ -185,11 +163,9 @@ main:
         DC32     ?_0
         DC32     ?_1
         DC32     IADC
-        DC32     sdram_test
-        DC32     ?_2
+        DC32     POINT_COLOR
+        DC32     ?_3
         DC32     rstr
-        DC32     ?_4
-        REQUIRE sdramdata
 
         SECTION `.iar_vfe_header`:DATA:NOALLOC:NOROOT(2)
         SECTION_TYPE SHT_PROGBITS, 0
@@ -210,32 +186,25 @@ main:
 
         SECTION `.rodata`:CONST:REORDER:NOROOT(2)
         DATA
-?_2:
-        DC8 "beforevalue=%d--%d.\012\015"
-        DC8 0, 0
-
-        SECTION `.rodata`:CONST:REORDER:NOROOT(2)
-        DATA
         DC8 "%s"
         DC8 0
 
         SECTION `.rodata`:CONST:REORDER:NOROOT(2)
         DATA
-?_4:
-        DC8 "aftervalue=%d--%d.\012\015"
-        DC8 0, 0, 0
+?_3:
+        DC8 "https://github.com/iysheng/apollo"
+        DC8 0, 0
 
         END
 // 
 //  24 bytes in section .bss
-//  16 bytes in section .bss    (abs)
 //   4 bytes in section .data
-// 144 bytes in section .rodata
-// 272 bytes in section .text
+// 132 bytes in section .rodata
+// 240 bytes in section .text
 // 
-// 272 bytes of CODE  memory
-// 144 bytes of CONST memory
-//  44 bytes of DATA  memory
+// 240 bytes of CODE  memory
+// 132 bytes of CONST memory
+//  28 bytes of DATA  memory
 //
 //Errors: none
-//Warnings: 2
+//Warnings: 3

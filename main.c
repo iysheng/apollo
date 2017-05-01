@@ -1,11 +1,13 @@
 #include "apollo.h"
+#include "rgb.h"
+
 
 extern UART_HandleTypeDef IUART;
 extern TIM_HandleTypeDef ITIM;
 extern TIM_HandleTypeDef ITIM5;
 extern TIM_OC_InitTypeDef IConfig;
 extern ADC_HandleTypeDef IADC;
-extern uint8_t rstr[RSTR_SIZE]; 
+extern char rstr[RSTR_SIZE]; 
 extern uint32_t led_flag;
 extern TIM_IC_InitTypeDef IC_Config;
 extern SDRAM_HandleTypeDef ISDRAM;
@@ -13,11 +15,14 @@ extern FMC_SDRAM_TimingTypeDef ISDRAM_Timing;
 extern uint64_t hole_ic_value;
 extern uint32_t ic_value;
 extern uint8_t ic_state;
+extern _ltdc_dev lcdltdc;
+extern uint32_t POINT_COLOR;		//画笔颜色
+extern uint32_t BACK_COLOR;
 extern uint32_t SystemCoreClock;//该系统变量实时等于系统时钟sysclock
 int sscanf_i = 0;
 
 //uint8_t mpudata[128] __attribute__((at(0x20002000)));
-__root uint8_t sdramdata[16] @ 0xc0000000;
+//__root uint8_t sdramdata[16] @ 0xc0000000;
 uint8_t *mpudata=(uint8_t *)(0x20002000);
 //uint8_t *sdramdata=(uint8_t *)(0xc0000000);
 
@@ -25,12 +30,12 @@ uint8_t * mpup;
 uint8_t sdram_test[16];
 int main()
 { 
-  uint32_t uitemp;
+  static uint32_t uitemp;
   float ftemp;
   mpup=mpudata;
 
   HAL_Init();
-  //CPU_CACHE_Enable();
+  CPU_CACHE_Enable();
   SystemClock_Config();//APB1:54MHZ APB2:108MHZ AHB:216MHZ
   LED_init();  
   KEY_init();
@@ -56,7 +61,8 @@ int main()
   mpudata[0]=10;
   MPU_init();
   SDRAM_init();
-    for(uitemp=0;uitemp<16;uitemp++)
+  LCD_Init();
+  /*for(uitemp=0;uitemp<16;uitemp++)
   {
     sdram_test[uitemp]=uitemp*2;
   }
@@ -70,11 +76,20 @@ int main()
   {
   sprintf((char *)rstr,"aftervalue=%d--%d.\n\r",uitemp,sdramdata[uitemp]);
   printf("%s",rstr);
-  }
-//  FMC_SDRAM_ReadBuffer(sdram_test+1,0x00,16);
+  }*/
+  //FMC_SDRAM_ReadBuffer(sdram_test+1,0x00,16);
   //sprintf((char *)rstr,"value=%d--%d.\n\r",sdram_test[0],sdram_test[1]);
   //printf("%s",rstr);
-  while(1);
+ LTDC_Clear(BLUE);
+  while(1)
+  {
+    POINT_COLOR=RED;
+    sprintf((char *)rstr,"%s","https://github.com/iysheng/apollo");
+    LCD_ShowString(10,40,10+strlen(rstr)*16,32,32,rstr); 
+    HAL_Delay(1000);
+  }
+  
+#if 0
   while(1){
   if((ic_state&0x80)==0x80)
   {
@@ -127,4 +142,5 @@ int main()
     memset((uint8_t*)rstr, 0, strlen(rstr));
   }*/
   }
+#endif
 }
