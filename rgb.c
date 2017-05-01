@@ -398,3 +398,28 @@ void HAL_LTDC_MspInit(LTDC_HandleTypeDef* hltdc)
     HAL_GPIO_Init(GPIOI,&GPIO_Initure); 
 }
 
+/*
+*added by iysheng@163.com 
+*posx,posy:图像的起始点坐标
+*uint8_t* 图像数组收地址
+*/
+void APPOLO_RGB(uint16_t posx,uint16_t posy,uint8_t *pic)
+{
+ uint32_t width,high,piex,uitemp[2];
+ if(pic[0]&0x01)
+ {
+   width=(pic[2]<<8)|pic[3];
+   high=(pic[4]<<8)|pic[5];
+   for(uitemp[0]=0;uitemp[0]<width;uitemp[0]++)
+    {
+      for(uitemp[1]=0;uitemp[1]<high*2;)
+      {
+      piex=((pic[(high<<1)*uitemp[0]+uitemp[1]])<<8)|(pic[(high<<1)*uitemp[0]+uitemp[1]+1]);
+      LTDC_Draw_Point(uitemp[0]+posx,posy+uitemp[1]/2,(uint32_t)(piex));
+      uitemp[1]+=2;
+      }
+    }
+ }
+   
+ 
+}

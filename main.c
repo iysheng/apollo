@@ -1,5 +1,7 @@
 #include "apollo.h"
 #include "rgb.h"
+#include "xiong.h"
+#include "test1.h"
 
 
 extern UART_HandleTypeDef IUART;
@@ -30,7 +32,8 @@ uint8_t * mpup;
 uint8_t sdram_test[16];
 int main()
 { 
-  static uint32_t uitemp;
+  static uint32_t uitemp[3];
+  static uint16_t piex;
   float ftemp;
   mpup=mpudata;
 
@@ -80,12 +83,38 @@ int main()
   //FMC_SDRAM_ReadBuffer(sdram_test+1,0x00,16);
   //sprintf((char *)rstr,"value=%d--%d.\n\r",sdram_test[0],sdram_test[1]);
   //printf("%s",rstr);
- LTDC_Clear(BLUE);
-  while(1)
+  BACK_COLOR=BLUE;
+  LTDC_Clear(BLUE);
+  POINT_COLOR=RED;
+  sprintf((char *)rstr,"%s","https://github.com/iysheng/apollo");
+  LCD_ShowString(0,272,10+strlen(rstr)*16,32,32,rstr); 
+
+    for(uitemp[0]=0;uitemp[0]<240;uitemp[0]++)
+    {
+      for(uitemp[1]=0;uitemp[1]<480;)
+      {
+      //piex=((gImage_xiong[480*uitemp[0]+uitemp[1]]+1)<<8)|(gImage_xiong[480*uitemp[0]+uitemp[1]]);
+      piex=((gImage_xiong[480*uitemp[0]+uitemp[1]])<<8)|(gImage_xiong[480*uitemp[0]+uitemp[1]+1]);
+      LTDC_Draw_Point(uitemp[0],uitemp[1]/2,(uint32_t)(piex));
+      uitemp[1]+=2;
+      }
+    }
+  HAL_Delay(1000);  
+    for(uitemp[0]=0;uitemp[0]<426;uitemp[0]++)
+    {
+      for(uitemp[1]=0;uitemp[1]<480;)
+      {
+      //piex=((gImage_xiong[480*uitemp[0]+uitemp[1]]+1)<<8)|(gImage_xiong[480*uitemp[0]+uitemp[1]]);
+      piex=((gImage_test1[480*uitemp[0]+uitemp[1]])<<8)|(gImage_test1[480*uitemp[0]+uitemp[1]+1]);
+      LTDC_Draw_Point(uitemp[0]+240,uitemp[1]/2,(uint32_t)(piex));
+      uitemp[1]+=2;
+      }
+    }
+HAL_Delay(1000);
+    APPOLO_RGB(0,0,gImage_xiong);
+    while(1)
   {
-    POINT_COLOR=RED;
-    sprintf((char *)rstr,"%s","https://github.com/iysheng/apollo");
-    LCD_ShowString(10,40,10+strlen(rstr)*16,32,32,rstr); 
+    
     HAL_Delay(1000);
   }
   
