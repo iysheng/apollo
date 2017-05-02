@@ -54,7 +54,7 @@ typedef struct
 {
 	u8 (*init)(void);			//初始化触摸屏控制器
 	u8 (*scan)(void);				//扫描触摸屏.0,屏幕扫描;1,物理坐标;	
-        u8 sta; 
+        u8 sta;
 	u16 x[CT_MAX_TOUCH]; 		//当前坐标
 	u16 y[CT_MAX_TOUCH];		//电容屏有最多5组坐标
 }_touch_dev;

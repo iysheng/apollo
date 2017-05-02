@@ -37,6 +37,7 @@ int main()
   uint32_t uitemp;
   uint16_t uline;
   float ftemp;
+  uint8_t i=0;
   mpup=mpudata;
 
   HAL_Init();
@@ -49,6 +50,7 @@ int main()
   HAL_NVIC_SetPriority(EXTI2_IRQn, 0x0, 1);
   HAL_NVIC_EnableIRQ(EXTI3_IRQn);
   HAL_NVIC_SetPriority(EXTI3_IRQn, 0x0, 1);
+  
 
   UART_init(&IUART);
   //TIM_init(&ITIM);
@@ -68,6 +70,8 @@ int main()
   SDRAM_init();
   LCD_Init();
   tp_dev.init();
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0x0, 1);
   /*for(uitemp=0;uitemp<16;uitemp++)
   {
     sdram_test[uitemp]=uitemp*2;
@@ -95,7 +99,12 @@ int main()
   //LCD_ShowString(0,272,10+strlen(rstr)*16,32,32,(uint8_t *)rstr); 
 
    while(1){
-    FT5206_Scan();
+     
+    if(tp_dev.sta!=0)
+    {
+      tp_dev.sta=0;
+      printf("x[%d]:%d,y[%d]:%d\r\n",i,tp_dev.x[i],i,tp_dev.y[i]);
+    }
     /*ic_state&=0x3f;
     hole_ic_value=ic_state*(0xffffffff);
     hole_ic_value+=ic_value;

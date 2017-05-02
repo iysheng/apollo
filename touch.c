@@ -1,7 +1,6 @@
 #include "touch.h"
 
 const u16 FT5206_TPX_TBL[5]={FT_TP1_REG,FT_TP2_REG,FT_TP3_REG,FT_TP4_REG,FT_TP5_REG};
-
 _touch_dev tp_dev={
     FT5206_Init,
     FT5206_Scan,
@@ -213,7 +212,9 @@ u8 FT5206_Init(void)
                 
     //PH7  INT
     GPIO_Initure.Pin=GPIO_PIN_7;            //PH7
-    GPIO_Initure.Mode=GPIO_MODE_INPUT;      //输入
+    //GPIO_Initure.Mode=GPIO_MODE_INPUT;      //输入
+    //GPIO_Initure.Mode=GPIO_MODE_IT_RISING;
+    GPIO_Initure.Mode=GPIO_MODE_IT_FALLING;
     GPIO_Initure.Pull=GPIO_PULLUP;          //上拉
     GPIO_Initure.Speed=GPIO_SPEED_HIGH;     //高速
     HAL_GPIO_Init(GPIOH,&GPIO_Initure);     //初始化
@@ -262,11 +263,9 @@ u8 FT5206_Scan(void)
 					tp_dev.y[i]=((u16)(buf[0]&0X0F)<<8)+buf[1];
 					tp_dev.x[i]=((u16)(buf[2]&0X0F)<<8)+buf[3];
 					//if((buf[0]&0XF0)!=0X80)tp_dev.x[i]=tp_dev.y[i]=0;//必须是contact事件，才认为有效
-					 printf("x[%d]:%d,y[%d]:%d\r\n",i,tp_dev.x[i],i,tp_dev.y[i]);
+					 //printf("x[%d]:%d,y[%d]:%d\r\n",i,tp_dev.x[i],i,tp_dev.y[i]);
 				}			
 			} 
-			if(tp_dev.x[0]==0 && tp_dev.y[0]==0)mode=0;	//读到的数据都是0,则忽略此次数据
-			//t=0;		//触发一次,则会最少连续监测10次,从而提高命中率
 		}
   return 0;
 }
