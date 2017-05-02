@@ -2,6 +2,7 @@
 #include "rgb.h"
 #include "xiong.h"
 #include "touch.h"
+#include "math.h"
 
 
 extern UART_HandleTypeDef IUART;
@@ -96,15 +97,23 @@ int main()
   APPOLO_RGB(0,0,gImage_xiong);
   HAL_Delay(1000);
   //sprintf((char *)rstr,"%s","https://github.com/iysheng/apollo");
-  //LCD_ShowString(0,272,10+strlen(rstr)*16,32,32,(uint8_t *)rstr); 
+  //LCD_ShowString(0,272,10+strlen(rstr)*16,32,32,(uint8_t *)rstr);log(1+tp_dev.sta&0x1f)/log(2) 
 
    while(1){
     if(tp_dev.sta!=0)
     {
-      tp_dev.sta=0;
-      sprintf((char *)rstr,"touchpoint,x=%d,y=%d",(uint16_t)tp_dev.x[0],(uint16_t)tp_dev.y[0]);
-      printf("%s\r\n",rstr);
+      tp_dev.sta&=0x1f;
+      while(tp_dev.sta&0x01){
+        i++;
+        tp_dev.sta>>=1;
+      }
+      for(tp_dev.sta=0;tp_dev.sta<i;tp_dev.sta++)
+      {
+      sprintf((char *)rstr,"%dtouchpoint,x=%d,y=%d",tp_dev.sta,(uint16_t)tp_dev.x[tp_dev.sta],(uint16_t)tp_dev.y[tp_dev.sta]);
+      printf("%s\r\n",rstr);}
       LCD_ShowString(200,50+3*80,32*16,32,32,(uint8_t *)rstr);
+      i=0;
+      tp_dev.sta=0;
     }
     /*ic_state&=0x3f;
     hole_ic_value=ic_state*(0xffffffff);

@@ -254,17 +254,17 @@ u8 FT5206_Scan(void)
 		if((mode&0XF)&&((mode&0XF)<6))
 		{
 			temp=0XFF<<(mode&0XF);//将点的个数转换为1的位数,匹配tp_dev.sta定义,最多为5个1 0x1f 
-			tp_dev.sta=(~temp)|TP_PRES_DOWN|TP_CATH_PRES; 
-			for(i=0;i<5;i++)
+			tp_dev.sta=(~temp)|TP_PRES_DOWN|TP_CATH_PRES;
+                        temp=mode&0XF;
+			for(i=0;i<temp;i++)
 			{
-				if(tp_dev.sta&(1<<i))		//触摸有效?
-				{
+				//if(tp_dev.sta&(1<<i))		//触摸有效?
+				//{
 					FT5206_RD_Reg(FT5206_TPX_TBL[i],buf,4);	//读取XY坐标值
 					tp_dev.y[i]=((u16)(buf[0]&0X0F)<<8)+buf[1];
 					tp_dev.x[i]=((u16)(buf[2]&0X0F)<<8)+buf[3];
-					//if((buf[0]&0XF0)!=0X80)tp_dev.x[i]=tp_dev.y[i]=0;//必须是contact事件，才认为有效
-					 //printf("x[%d]:%d,y[%d]:%d\r\n",i,tp_dev.x[i],i,tp_dev.y[i]);
-				}			
+					//printf("x[%d]:%d,y[%d]:%d\r\n",i,tp_dev.x[i],i,tp_dev.y[i]);
+				//}			
 			} 
 		}
   return 0;
