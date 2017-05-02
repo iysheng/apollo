@@ -99,11 +99,12 @@ int main()
   //LCD_ShowString(0,272,10+strlen(rstr)*16,32,32,(uint8_t *)rstr); 
 
    while(1){
-     
     if(tp_dev.sta!=0)
     {
       tp_dev.sta=0;
-      printf("x[%d]:%d,y[%d]:%d\r\n",i,tp_dev.x[i],i,tp_dev.y[i]);
+      sprintf((char *)rstr,"touchpoint,x=%d,y=%d",(uint16_t)tp_dev.x[0],(uint16_t)tp_dev.y[0]);
+      printf("%s\r\n",rstr);
+      LCD_ShowString(200,50+3*80,32*16,32,32,(uint8_t *)rstr);
     }
     /*ic_state&=0x3f;
     hole_ic_value=ic_state*(0xffffffff);
@@ -120,13 +121,12 @@ int main()
     case 2:{sprintf((char *)rstr,"%s","hello china");break;}
     case 3:{sprintf((char *)rstr,"%d",lcd_led_flag);break;}
     case 4:{uitemp=HAL_ADC_GetValue(&IADC);ftemp=((float)uitemp)/4095*3300;ftemp=((ftemp-760.0)/2.5)+25;
-    sprintf((char *)rstr,"%0.3f",ftemp);break;}
+    sprintf((char *)rstr,"%0.3f",ftemp);HAL_Delay(1000);break;}
     default:break;
     }
     LCD_ShowString(120,50+uline*80,strlen(rstr)*16,32,32,(uint8_t *)rstr);
     uline++;
-    uline%=5;
-   // HAL_Delay(1000);
+    uline%=5;   
   }
   
 #if 0
