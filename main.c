@@ -1,7 +1,7 @@
 #include "apollo.h"
 #include "rgb.h"
 #include "xiong.h"
-#include "test1.h"
+#include "touch.h"
 
 
 extern UART_HandleTypeDef IUART;
@@ -22,6 +22,7 @@ extern uint32_t POINT_COLOR;		//画笔颜色
 extern uint32_t BACK_COLOR;
 extern uint32_t SystemCoreClock;//该系统变量实时等于系统时钟sysclock
 extern uint8_t lcd_led_flag;
+extern _touch_dev tp_dev;
 int sscanf_i = 0;
 
 //uint8_t mpudata[128] __attribute__((at(0x20002000)));
@@ -66,6 +67,7 @@ int main()
   MPU_init();
   SDRAM_init();
   LCD_Init();
+  tp_dev.init();
   /*for(uitemp=0;uitemp<16;uitemp++)
   {
     sdram_test[uitemp]=uitemp*2;
@@ -93,7 +95,7 @@ int main()
   //LCD_ShowString(0,272,10+strlen(rstr)*16,32,32,(uint8_t *)rstr); 
 
    while(1){
-    
+    FT5206_Scan();
     /*ic_state&=0x3f;
     hole_ic_value=ic_state*(0xffffffff);
     hole_ic_value+=ic_value;
@@ -101,7 +103,7 @@ int main()
     ic_state=0x00;*/
     //sprintf((char *)rstr,"tempture=%f,hole_value=%lldus.\n\r",ftemp,hole_ic_value);    
     //MPU_set_protection(0x20002000,10,MPU_REGION_NUMBER0,MPU_REGION_PRIV_RO_URO );
-    printf("%s",rstr);
+    //printf("%s",rstr);
     switch(uline)
     {
     case 0:{sprintf((char *)rstr,"%s","iysheng@163.com");break;}
@@ -115,7 +117,7 @@ int main()
     LCD_ShowString(120,50+uline*80,strlen(rstr)*16,32,32,(uint8_t *)rstr);
     uline++;
     uline%=5;
-    HAL_Delay(1000);
+   // HAL_Delay(1000);
   }
   
 #if 0

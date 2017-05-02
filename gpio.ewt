@@ -2384,5 +2384,8 @@
         <file>
             <name>$PROJ_DIR$\rgb.c</name>
         </file>
+        <file>
+            <name>$PROJ_DIR$\touch.c</name>
+        </file>
     </group>
 </project>
