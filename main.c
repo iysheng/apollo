@@ -43,7 +43,6 @@ int main()
   uint16_t uline;
   float ftemp;
   uint8_t i=0;
-  mpup=mpudata;
 
   HAL_Init();
   CPU_CACHE_Enable();
@@ -58,19 +57,19 @@ int main()
 
   UART_init(&IUART);
   
-  PWM_init(&ITIM3,&IConfig,TIM_CHANNEL_4);
-  //TIM_init(&ITIM3);
+  //PWM_init(&ITIM3,&IConfig,TIM_CHANNEL_4);
+
   IC_init(&ITIM5,&IC_Config,TIM_CHANNEL_1);
   //HAL_NVIC_EnableIRQ(USART2_IRQn);
   //HAL_NVIC_SetPriority(USART2_IRQn, 0x0, 0); 
   
   /* Output a message on Hyperterminal using printf function */
   printf("\r\n*****Welocome to Apollo's world!*****\n\r");
-  //TEMP_init();
-  //HAL_ADC_Start(&IADC);//转换开始
-  TIM2_init();
   CEKONG_init();
- 
+  TIM2_init();//导致无法输出PWM
+  TIM3_init();//为什么TIM3的初始化要放在TIM2之后才可以正常工作?
+   #if 0
+    
   printf("\r\n*****Tempetuarate&TIM2 init finished!*****\n\r");
   MPU_init();
   SDRAM_init();
@@ -85,20 +84,31 @@ int main()
   POINT_COLOR=RED;
   APPOLO_RGB(0,0,gImage_xiong);
   */
+  #endif
    HAL_ADC_Start_DMA(&ICEKONG,(uint32_t *)raw_icekong,IDAC_COUNT);
+
+
   while(1)
   {
-    //HAL_ADC_Start_DMA(&ICEKONG,(uint32_t *)raw_icekong,IDAC_COUNT);
-    if((dma_adc_flag&0xff)==0x01){
-    //HAL_ADC_Stop_DMA(&ICEKONG);
+    if(dma_adc_flag<<7){
     dma_adc_flag=0X00;
-    ftemp=((float)raw_icekong[0])/4095*3300;ftemp=((ftemp-760.0)/2.5)+25;
-    
+    ftemp=((float)raw_icekong[0])/4095*3300;ftemp=((ftemp-760.0)/2.5)+25;    
     sprintf((char *)rstr,"temp:raw%d--%0.4f...pa4:%d...pa5:%d...pa6:%d\n\r",raw_icekong[0],ftemp,raw_icekong[1],raw_icekong[2],raw_icekong[3]);
     printf("%s\r\n",rstr);
-    //HAL_Delay(1000);
+    }
+    if((ic_state&0x80)==0x80)
+    {
+      mpudata[0]++;
+      ic_state&=0x3f;
+      hole_ic_value=ic_state*(0xffffffff);
+      hole_ic_value+=ic_value;
+      ic_value=hole_ic_value/1000;
+      sprintf((char *)rstr,"value=%dms,hole_value=%lldus.\n\r",ic_value,hole_ic_value);
+      printf("%s",rstr);
+      ic_state=0x00;
     }
   }
+  #if 0
    while(1){
     /*if(tp_dev.sta!=0)//有按键按下
     {
@@ -115,17 +125,7 @@ int main()
       i=0;
       tp_dev.sta=0;
     }*/
-    if((ic_state&0x80)==0x80)
-    {
-      mpudata[0]++;
-      ic_state&=0x3f;
-      hole_ic_value=ic_state*(0xffffffff);
-      hole_ic_value+=ic_value;
-      ic_value=hole_ic_value/1000;
-      sprintf((char *)rstr,"value=%dms,hole_value=%lldus.\n\r",ic_value,hole_ic_value);
-      printf("%s",rstr);
-      ic_state=0x00;
-    }
+
     
     switch(uline)
     {
@@ -143,6 +143,7 @@ int main()
     uline%=5;  
   }
   
+#endif
 #if 0
   while(1){    
   /*
