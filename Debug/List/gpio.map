@@ -1,12 +1,12 @@
 ###############################################################################
 #
-# IAR ELF Linker V8.11.1.13263/W32 for ARM                03/May/2017  23:25:41
+# IAR ELF Linker V8.11.1.13263/W32 for ARM                03/May/2017  23:36:55
 # Copyright 2007-2017 IAR Systems AB.
 #
 #    Output file  =  D:\Apollo\gpio\Debug\Exe\gpio.out
 #    Map file     =  D:\Apollo\gpio\Debug\List\gpio.map
 #    Command line =  
-#        -f C:\Users\iysheng\AppData\Local\Temp\EW6C0.tmp
+#        -f C:\Users\iysheng\AppData\Local\Temp\EW4D63.tmp
 #        (D:\Apollo\gpio\Debug\Obj\apollo.o D:\Apollo\gpio\Debug\Obj\main.o
 #        D:\Apollo\gpio\Debug\Obj\rgb.o
 #        D:\Apollo\gpio\Debug\Obj\startup_stm32f767xx.o
@@ -71,7 +71,7 @@ initialize by copy { rw };
   .intvec            ro code  0x00200000     0x1f8  startup_stm32f767xx.o [1]
                             - 0x002001f8     0x1f8
 
-"P1":                                      0xc6fe8
+"P1":                                      0xc6fb8
   .rodata            const    0x002001f8   0xbb808  main.o [1]
   .rodata            const    0x002bba00    0x2f80  rgb.o [1]
   .text              ro code  0x002be980     0xde6  xprintffull_nomb.o [3]
@@ -136,36 +136,47 @@ initialize by copy { rw };
   .text              ro code  0x002c6c6c      0x40  sprintf.o [3]
   .text              ro code  0x002c6cac      0x6c  system_stm32f7xx.o [1]
   .text              ro code  0x002c6d18      0x40  zero_init3.o [5]
-  .rodata            const    0x002c6d58      0x30  main.o [1]
-  .rodata            const    0x002c6d88      0x2c  main.o [1]
-  .text              ro code  0x002c6db4      0x2c  copy_init3.o [5]
-  .text              ro code  0x002c6de0      0x28  data_init.o [5]
-  .text              ro code  0x002c6e08      0x22  fpinit_M.o [4]
-  .iar.init_table    const    0x002c6e2c      0x2c  - Linker created -
-  .rodata            const    0x002c6e58      0x1c  main.o [1]
-  .text              ro code  0x002c6e74      0x1a  cmain.o [5]
-  .text              ro code  0x002c6e8e       0x4  low_level_init.o [3]
-  .text              ro code  0x002c6e92       0x4  exit.o [3]
-  .text              ro code  0x002c6e98       0xa  cexit.o [5]
-  .text              ro code  0x002c6ea2      0x16  stm32f7xx_it.o [1]
-  .text              ro code  0x002c6eb8      0x10  stm32f7xx_hal.o [1]
-  .text              ro code  0x002c6ec8      0x16  xprout.o [3]
-  .text              ro code  0x002c6ee0       0xc  putchar.o [3]
-  .rodata            const    0x002c6eec      0x14  main.o [1]
-  .rodata            const    0x002c6f00      0x10  apollo.o [1]
-  .rodata            const    0x002c6f10      0x10  system_stm32f7xx.o [1]
-  .text              ro code  0x002c6f20      0x10  startup_stm32f767xx.o [1]
-  .rodata            const    0x002c6f30       0xc  main.o [1]
-  .rodata            const    0x002c6f3c       0xc  main.o [1]
-  .rodata            const    0x002c6f48       0xc  main.o [1]
-  .rodata            const    0x002c6f54       0xc  touch.o [1]
-  .rodata            const    0x002c6f60       0xc  touch.o [1]
-  .text              ro code  0x002c6f6c       0xc  cstartup_M.o [5]
-  .rodata            const    0x002c6f78       0x8  main.o [1]
-  .rodata            const    0x002c6f80       0x8  main.o [1]
-  .rodata            const    0x002c6f88       0x8  stm32f7xx_hal_dma.o [1]
-  .rodata            const    0x002c6f90       0x8  system_stm32f7xx.o [1]
-  .rodata            const    0x002c6f98       0x4  xlocale_c.o [3]
+  .rodata            const    0x002c6d58      0x2c  main.o [1]
+  .text              ro code  0x002c6d84      0x2c  copy_init3.o [5]
+  .text              ro code  0x002c6db0      0x28  data_init.o [5]
+  .text              ro code  0x002c6dd8      0x22  fpinit_M.o [4]
+  .iar.init_table    const    0x002c6dfc      0x2c  - Linker created -
+  .rodata            const    0x002c6e28      0x1c  main.o [1]
+  .text              ro code  0x002c6e44      0x1a  cmain.o [5]
+  .text              ro code  0x002c6e5e       0x4  low_level_init.o [3]
+  .text              ro code  0x002c6e62       0x4  exit.o [3]
+  .text              ro code  0x002c6e68       0xa  cexit.o [5]
+  .text              ro code  0x002c6e72      0x16  stm32f7xx_it.o [1]
+  .text              ro code  0x002c6e88      0x10  stm32f7xx_hal.o [1]
+  .text              ro code  0x002c6e98      0x16  xprout.o [3]
+  .text              ro code  0x002c6eb0       0xc  putchar.o [3]
+  .rodata            const    0x002c6ebc      0x14  main.o [1]
+  .rodata            const    0x002c6ed0      0x10  apollo.o [1]
+  .rodata            const    0x002c6ee0      0x10  system_stm32f7xx.o [1]
+  .text              ro code  0x002c6ef0      0x10  startup_stm32f767xx.o [1]
+  .rodata            const    0x002c6f00       0xc  main.o [1]
+  .rodata            const    0x002c6f0c       0xc  main.o [1]
+  .rodata            const    0x002c6f18       0xc  main.o [1]
+  .rodata            const    0x002c6f24       0xc  touch.o [1]
+  .rodata            const    0x002c6f30       0xc  touch.o [1]
+  .text              ro code  0x002c6f3c       0xc  cstartup_M.o [5]
+  .rodata            const    0x002c6f48       0x8  main.o [1]
+  .rodata            const    0x002c6f50       0x8  main.o [1]
+  .rodata            const    0x002c6f58       0x8  stm32f7xx_hal_dma.o [1]
+  .rodata            const    0x002c6f60       0x8  system_stm32f7xx.o [1]
+  .rodata            const    0x002c6f68       0x4  xlocale_c.o [3]
+  .text              ro code  0x002c6f6c       0x4  startup_stm32f767xx.o [1]
+  .text              ro code  0x002c6f70       0x4  startup_stm32f767xx.o [1]
+  .text              ro code  0x002c6f74       0x4  startup_stm32f767xx.o [1]
+  .text              ro code  0x002c6f78       0x4  startup_stm32f767xx.o [1]
+  .text              ro code  0x002c6f7c       0x4  startup_stm32f767xx.o [1]
+  .text              ro code  0x002c6f80       0x4  startup_stm32f767xx.o [1]
+  .text              ro code  0x002c6f84       0x4  startup_stm32f767xx.o [1]
+  .text              ro code  0x002c6f88       0x4  startup_stm32f767xx.o [1]
+  .text              ro code  0x002c6f8c       0x4  startup_stm32f767xx.o [1]
+  .text              ro code  0x002c6f90       0x4  startup_stm32f767xx.o [1]
+  .text              ro code  0x002c6f94       0x4  startup_stm32f767xx.o [1]
+  .text              ro code  0x002c6f98       0x4  startup_stm32f767xx.o [1]
   .text              ro code  0x002c6f9c       0x4  startup_stm32f767xx.o [1]
   .text              ro code  0x002c6fa0       0x4  startup_stm32f767xx.o [1]
   .text              ro code  0x002c6fa4       0x4  startup_stm32f767xx.o [1]
@@ -255,22 +266,10 @@ initialize by copy { rw };
   .text              ro code  0x002c70f4       0x4  startup_stm32f767xx.o [1]
   .text              ro code  0x002c70f8       0x4  startup_stm32f767xx.o [1]
   .text              ro code  0x002c70fc       0x4  startup_stm32f767xx.o [1]
-  .text              ro code  0x002c7100       0x4  startup_stm32f767xx.o [1]
-  .text              ro code  0x002c7104       0x4  startup_stm32f767xx.o [1]
-  .text              ro code  0x002c7108       0x4  startup_stm32f767xx.o [1]
-  .text              ro code  0x002c710c       0x4  startup_stm32f767xx.o [1]
-  .text              ro code  0x002c7110       0x4  startup_stm32f767xx.o [1]
-  .text              ro code  0x002c7114       0x4  startup_stm32f767xx.o [1]
-  .text              ro code  0x002c7118       0x4  startup_stm32f767xx.o [1]
-  .text              ro code  0x002c711c       0x4  startup_stm32f767xx.o [1]
-  .text              ro code  0x002c7120       0x4  startup_stm32f767xx.o [1]
-  .text              ro code  0x002c7124       0x4  startup_stm32f767xx.o [1]
-  .text              ro code  0x002c7128       0x4  startup_stm32f767xx.o [1]
-  .text              ro code  0x002c712c       0x4  startup_stm32f767xx.o [1]
-  .rodata            const    0x002c7130       0x0  zero_init3.o [5]
-  .rodata            const    0x002c7130       0x0  copy_init3.o [5]
-  Initializer bytes  const    0x002c7130      0xb0  <for P5 s0>
-                            - 0x002c71e0   0xc6fe8
+  .rodata            const    0x002c7100       0x0  zero_init3.o [5]
+  .rodata            const    0x002c7100       0x0  copy_init3.o [5]
+  Initializer bytes  const    0x002c7100      0xb0  <for P5 s0>
+                            - 0x002c71b0   0xc6fb8
 
 "P4":                                       0x2000
   CSTACK                      0x20000000    0x2000  <Block>
@@ -333,7 +332,7 @@ Zero (__iar_zero_init3)
 
 Copy (__iar_copy_init3)
     1 source range, total size 0xb0:
-          0x002c7130      0xb0
+          0x002c7100      0xb0
     1 destination range, total size 0xb0:
           0x20010000      0xb0
 
@@ -348,7 +347,7 @@ Copy (__iar_copy_init3)
     ------                  -------  -------  -------    -------
 D:\Apollo\gpio\Debug\Obj: [1]
     apollo.o                  3 008       16      711
-    main.o                      820  768 204       12
+    main.o                      820  768 156       12
     rgb.o                     2 668   18 248      237  2 048 000
     startup_stm32f767xx.o       924
     stm32f7xx_hal.o             136                 4
@@ -369,7 +368,7 @@ D:\Apollo\gpio\Debug\Obj: [1]
     system_stm32f7xx.o          108       28        4
     touch.o                   1 496       56       32
     ------------------------------------------------------------
-    Total:                   23 520  786 560    1 000  2 048 000
+    Total:                   23 520  786 512    1 000  2 048 000
 
 command line: [2]
     ------------------------------------------------------------
@@ -432,7 +431,7 @@ shb_l.a: [6]
     Gaps                         30        2
     Linker created                        44    8 192
 ----------------------------------------------------------------
-    Grand Total:             28 846  786 738    9 404  2 048 000
+    Grand Total:             28 846  786 690    9 404  2 048 000
 
 
 *******************************************************************************
@@ -441,18 +440,18 @@ shb_l.a: [6]
 
 Entry                      Address      Size  Type      Object
 -----                      -------      ----  ----      ------
-.iar.init_table$$Base   0x002c6e2c             --   Gb  - Linker created -
-.iar.init_table$$Limit  0x002c6e58             --   Gb  - Linker created -
-?main                   0x002c6e75            Code  Gb  cmain.o [5]
+.iar.init_table$$Base   0x002c6dfc             --   Gb  - Linker created -
+.iar.init_table$$Limit  0x002c6e28             --   Gb  - Linker created -
+?main                   0x002c6e45            Code  Gb  cmain.o [5]
 ADC_DMAConvCplt         0x002c33ad      0x68  Code  Lc  stm32f7xx_hal_adc.o [1]
 ADC_DMAError            0x002c3421      0x16  Code  Lc  stm32f7xx_hal_adc.o [1]
 ADC_DMAHalfConvCplt     0x002c3415       0xa  Code  Lc  stm32f7xx_hal_adc.o [1]
 ADC_Init                0x002c3227     0x166  Code  Lc  stm32f7xx_hal_adc.o [1]
-AHBPrescTable           0x002c6f10      0x10  Data  Gb  system_stm32f7xx.o [1]
-APBPrescTable           0x002c6f90       0x8  Data  Gb  system_stm32f7xx.o [1]
+AHBPrescTable           0x002c6ee0      0x10  Data  Gb  system_stm32f7xx.o [1]
+APBPrescTable           0x002c6f60       0x8  Data  Gb  system_stm32f7xx.o [1]
 APPOLO_RGB              0x002c51bd      0x84  Code  Gb  rgb.o [1]
 BACK_COLOR              0x200100a8       0x4  Data  Gb  rgb.o [1]
-BusFault_Handler        0x002c6ea7       0x2  Code  Gb  stm32f7xx_it.o [1]
+BusFault_Handler        0x002c6e77       0x2  Code  Gb  stm32f7xx_it.o [1]
 CEKONG_init             0x002c0d57      0xf0  Code  Gb  apollo.o [1]
 CPU_CACHE_Enable        0x002c0b11       0xc  Code  Gb  apollo.o [1]
 CSTACK$$Base            0x20000000             --   Gb  - Linker created -
@@ -471,10 +470,10 @@ DMA2_Stream0_IRQHandler
 DMA_CalcBaseAndBitshift
                         0x002c2e1f      0x30  Code  Lc  stm32f7xx_hal_dma.o [1]
 DMA_CalcBaseAndBitshift::flagBitshiftOffset
-                        0x002c6f88       0x8  Data  Lc  stm32f7xx_hal_dma.o [1]
+                        0x002c6f58       0x8  Data  Lc  stm32f7xx_hal_dma.o [1]
 DMA_CheckFifoParam      0x002c2e65      0x96  Code  Lc  stm32f7xx_hal_dma.o [1]
 DMA_SetConfig           0x002c2df1      0x2e  Code  Lc  stm32f7xx_hal_dma.o [1]
-DebugMon_Handler        0x002c6ead       0x2  Code  Gb  stm32f7xx_it.o [1]
+DebugMon_Handler        0x002c6e7d       0x2  Code  Gb  stm32f7xx_it.o [1]
 EXTI2_IRQHandler        0x002c1483      0x12  Code  Gb  apollo.o [1]
 EXTI3_IRQHandler        0x002c1495      0x1a  Code  Gb  apollo.o [1]
 EXTI9_5_IRQHandler      0x002c14af       0xe  Code  Gb  apollo.o [1]
@@ -486,7 +485,7 @@ FMC_SDRAM_Timing_Init   0x002c46dd      0x96  Code  Gb  stm32f7xx_ll_fmc.o [1]
 FT5206_Init             0x002c442d     0x108  Code  Gb  touch.o [1]
 FT5206_RD_Reg           0x002c43cb      0x62  Code  Gb  touch.o [1]
 FT5206_Scan             0x002c4535      0xa2  Code  Gb  touch.o [1]
-FT5206_TPX_TBL          0x002c6f60       0xc  Data  Gb  touch.o [1]
+FT5206_TPX_TBL          0x002c6f30       0xc  Data  Gb  touch.o [1]
 FT5206_WR_Reg           0x002c4377      0x54  Code  Gb  touch.o [1]
 HAL_ADC_ConfigChannel   0x002c3087     0x1a0  Code  Gb  stm32f7xx_hal_adc.o [1]
 HAL_ADC_ConvCpltCallback
@@ -504,7 +503,7 @@ HAL_GPIO_ReadPin        0x002c1777      0x12  Code  Gb  stm32f7xx_hal_gpio.o [1]
 HAL_GPIO_TogglePin      0x002c179d       0xa  Code  Gb  stm32f7xx_hal_gpio.o [1]
 HAL_GPIO_WritePin       0x002c1789      0x14  Code  Gb  stm32f7xx_hal_gpio.o [1]
 HAL_GetTick             0x002c461d       0xc  Code  Wk  stm32f7xx_hal.o [1]
-HAL_IncTick             0x002c6eb9      0x10  Code  Wk  stm32f7xx_hal.o [1]
+HAL_IncTick             0x002c6e89      0x10  Code  Wk  stm32f7xx_hal.o [1]
 HAL_Init                0x002c6c41      0x22  Code  Gb  stm32f7xx_hal.o [1]
 HAL_InitTick            0x002c4631      0x28  Code  Wk  stm32f7xx_hal.o [1]
 HAL_LTDC_ConfigLayer    0x002c536d      0x52  Code  Gb  stm32f7xx_hal_ltdc.o [1]
@@ -567,7 +566,7 @@ HAL_UART_IRQHandler     0x002c1933     0x146  Code  Gb  stm32f7xx_hal_uart.o [1]
 HAL_UART_Init           0x002c17e9      0x7e  Code  Gb  stm32f7xx_hal_uart.o [1]
 HAL_UART_MspInit        0x002c0e47      0xf0  Code  Gb  apollo.o [1]
 HAL_UART_Transmit       0x002c1867      0xcc  Code  Gb  stm32f7xx_hal_uart.o [1]
-HardFault_Handler       0x002c6ea5       0x2  Code  Gb  stm32f7xx_it.o [1]
+HardFault_Handler       0x002c6e75       0x2  Code  Gb  stm32f7xx_it.o [1]
 ICEKONG                 0x200102f8      0x48  Data  Gb  apollo.o [1]
 IC_Config               0x20010470      0x10  Data  Gb  apollo.o [1]
 IC_init                 0x002c107f      0x4a  Code  Gb  apollo.o [1]
@@ -602,7 +601,7 @@ LoadInt                 0x002beb1f      0x7a  Code  Lc  xprintffull_nomb.o [3]
 MPU_init                0x002c0c2f      0x12  Code  Gb  apollo.o [1]
 MPU_set_protection      0x002c0be1      0x4e  Code  Gb  apollo.o [1]
 MemManage_Handler       0x002c14c7       0xe  Code  Gb  apollo.o [1]
-NMI_Handler             0x002c6ea3       0x2  Code  Gb  stm32f7xx_it.o [1]
+NMI_Handler             0x002c6e73       0x2  Code  Gb  stm32f7xx_it.o [1]
 NVIC_EnableIRQ          0x002c28bf      0x14  Code  Lc  stm32f7xx_hal_cortex.o [1]
 NVIC_EncodePriority     0x002c28f5      0x3e  Code  Lc  stm32f7xx_hal_cortex.o [1]
 NVIC_GetPriorityGrouping
@@ -612,18 +611,18 @@ NVIC_SetPriorityGrouping
                         0x002c2899      0x1c  Code  Lc  stm32f7xx_hal_cortex.o [1]
 NVIC_SystemReset        0x002c09bd      0x22  Code  Lc  apollo.o [1]
 POINT_COLOR             0x200100a4       0x4  Data  Gb  rgb.o [1]
-PendSV_Handler          0x002c6eaf       0x2  Code  Gb  stm32f7xx_it.o [1]
-Region$$Table$$Base     0x002c6e2c             --   Gb  - Linker created -
-Region$$Table$$Limit    0x002c6e58             --   Gb  - Linker created -
+PendSV_Handler          0x002c6e7f       0x2  Code  Gb  stm32f7xx_it.o [1]
+Region$$Table$$Base     0x002c6dfc             --   Gb  - Linker created -
+Region$$Table$$Limit    0x002c6e28             --   Gb  - Linker created -
 SCB_EnableDCache        0x002c0a09      0x5e  Code  Lc  apollo.o [1]
 SCB_EnableICache        0x002c09df      0x2a  Code  Lc  apollo.o [1]
 SDRAM_Initialization_Sequence
                         0x002c1353      0x4a  Code  Gb  apollo.o [1]
 SDRAM_Send_Cmd          0x002c139d      0x3e  Code  Gb  apollo.o [1]
 SDRAM_init              0x002c11c1      0xa6  Code  Gb  apollo.o [1]
-SVC_Handler             0x002c6eab       0x2  Code  Gb  stm32f7xx_it.o [1]
+SVC_Handler             0x002c6e7b       0x2  Code  Gb  stm32f7xx_it.o [1]
 SysTick_Config          0x002c2933      0x2e  Code  Lc  stm32f7xx_hal_cortex.o [1]
-SysTick_Handler         0x002c6eb1       0x8  Code  Gb  stm32f7xx_it.o [1]
+SysTick_Handler         0x002c6e81       0x8  Code  Gb  stm32f7xx_it.o [1]
 SystemClock_Config      0x002c0b1d      0xae  Code  Gb  apollo.o [1]
 SystemCoreClock         0x200100ac       0x4  Data  Gb  system_stm32f7xx.o [1]
 SystemInit              0x002c6cad      0x4c  Code  Gb  system_stm32f7xx.o [1]
@@ -655,13 +654,13 @@ UART_WaitOnFlagUntilTimeout
                         0x002c1a79      0x6e  Code  Gb  stm32f7xx_hal_uart.o [1]
 UART_init               0x002c0ae9      0x28  Code  Gb  apollo.o [1]
 USART2_IRQHandler       0x002c14bd       0xa  Code  Gb  apollo.o [1]
-UsageFault_Handler      0x002c6ea9       0x2  Code  Gb  stm32f7xx_it.o [1]
+UsageFault_Handler      0x002c6e79       0x2  Code  Gb  stm32f7xx_it.o [1]
 _GenldFullNoMb          0x002bf483     0x256  Code  Lc  xprintffull_nomb.o [3]
 _LdtobFullNoMb          0x002bf05b     0x3fe  Code  Lc  xprintffull_nomb.o [3]
 _LitobFullNoMb          0x002bef0b     0x10a  Code  Lc  xprintffull_nomb.o [3]
 _Locale_lconv           0x20010048      0x38  Data  Lc  xlocale_c.o [3]
 _PrintfFullNoMb         0x002be981     0x190  Code  Gb  xprintffull_nomb.o [3]
-_Prout                  0x002c6ec9      0x16  Code  Gb  xprout.o [3]
+_Prout                  0x002c6e99      0x16  Code  Gb  xprout.o [3]
 _PutcharsFullNoMb       0x002bf6d9      0x2e  Code  Lc  xprintffull_nomb.o [3]
 _PutfldFullNoMb         0x002beb99     0x264  Code  Lc  xprintffull_nomb.o [3]
 _PuttxtFullNoMb         0x002bedfd     0x10e  Code  Lc  xprintffull_nomb.o [3]
@@ -681,7 +680,7 @@ __aeabi_memcpy8         0x002bf97d            Code  Gb  ABImemcpy.o [5]
 __aeabi_memset          0x002c3439            Code  Gb  ABImemset.o [5]
 __aeabi_ui2d            0x002bfc27       0xe  Code  Gb  U32ToDbl.o [4]
 __aeabi_uldivmod        0x002bf85d            Code  Gb  I64DivMod.o [5]
-__cmain                 0x002c6e75            Code  Gb  cmain.o [5]
+__cmain                 0x002c6e45            Code  Gb  cmain.o [5]
 __exit                  0x002bfc4d      0x14  Code  Gb  exit.o [6]
 __iar_Fail_s            0x002bf789      0x1e  Code  Gb  xfail_s.o [3]
 __iar_Memchr            0x002bf805            Code  Gb  memchr.o [5]
@@ -689,13 +688,13 @@ __iar_Memset            0x002c3439            Code  Gb  ABImemset.o [5]
 __iar_Memset_word       0x002c3441            Code  Gb  ABImemset.o [5]
 __iar_Stdout            0x20010000      0x48  Data  Gb  xfiles.o [3]
 __iar_Strchr            0x002bf771            Code  Gb  strchr.o [5]
-__iar_copy_init3        0x002c6db5      0x2c  Code  Gb  copy_init3.o [5]
-__iar_data_init3        0x002c6de1      0x28  Code  Gb  data_init.o [5]
+__iar_copy_init3        0x002c6d85      0x2c  Code  Gb  copy_init3.o [5]
+__iar_data_init3        0x002c6db1      0x28  Code  Gb  data_init.o [5]
 __iar_frexp             0x002bfa11            Code  Gb  frexp.o [4]
 __iar_frexpl            0x002bfa11            Code  Gb  frexp.o [4]
-__iar_init_vfp          0x002c6e09            Code  Gb  fpinit_M.o [4]
+__iar_init_vfp          0x002c6dd9            Code  Gb  fpinit_M.o [4]
 __iar_ldexp64           0x002bfae9            Code  Gb  ldexp.o [4]
-__iar_program_start     0x002c6f6d            Code  Gb  cstartup_M.o [5]
+__iar_program_start     0x002c6f3d            Code  Gb  cstartup_M.o [5]
 __iar_scalbln64         0x002bfae9            Code  Gb  ldexp.o [4]
 __iar_scalbn64          0x002bfae9            Code  Gb  ldexp.o [4]
 __iar_softfp___iar_frexp64
@@ -717,11 +716,11 @@ __iar_softfp_scalbnl    0x002bfad5            Code  Gb  ldexp.o [4]
 __iar_systems$$module {Abs}
                         0x00000001            Data  Gb  command line/config [2]
 __iar_zero_init3        0x002c6d19      0x40  Code  Gb  zero_init3.o [5]
-__low_level_init        0x002c6e8f       0x4  Code  Gb  low_level_init.o [3]
+__low_level_init        0x002c6e5f       0x4  Code  Gb  low_level_init.o [3]
 __vector_table          0x00200000            Data  Gb  startup_stm32f767xx.o [1]
-_call_main              0x002c6e81            Code  Gb  cmain.o [5]
-_exit                   0x002c6e99            Code  Gb  cexit.o [5]
-_main                   0x002c6e8b            Code  Gb  cmain.o [5]
+_call_main              0x002c6e51            Code  Gb  cmain.o [5]
+_exit                   0x002c6e69            Code  Gb  cexit.o [5]
+_main                   0x002c6e5b            Code  Gb  cmain.o [5]
 abort                   0x002bfc41       0x6  Code  Gb  abort.o [3]
 asc2_1206               0x002c6498     0x474  Data  Lc  rgb.o [1]
 asc2_1608               0x002c5ea8     0x5f0  Data  Lc  rgb.o [1]
@@ -730,7 +729,7 @@ asc2_3216               0x002bba00    0x2f80  Data  Lc  rgb.o [1]
 delay_ms                0x002c401d       0x8  Code  Gb  touch.o [1]
 delay_us                0x002c4025      0x1a  Code  Gb  touch.o [1]
 dma_adc_flag            0x200104b8       0x2  Data  Gb  apollo.o [1]
-exit                    0x002c6e93       0x4  Code  Gb  exit.o [3]
+exit                    0x002c6e63       0x4  Code  Gb  exit.o [3]
 fputc                   0x002c0bcb      0x16  Code  Gb  apollo.o [1]
 gImage_xiong            0x002001f8   0xbb808  Data  Lc  main.o [1]
 hole_ic_value           0x20010490       0x8  Data  Gb  apollo.o [1]
@@ -748,7 +747,7 @@ memchr                  0x002bf805            Code  Gb  memchr.o [5]
 mpudata                 0x200100a0       0x4  Data  Gb  main.o [1]
 obuf                    0x200102a8      0x50  Data  Lc  xfiles.o [3]
 printf                  0x002c45f5      0x28  Code  Gb  printf.o [3]
-putchar                 0x002c6ee1       0xc  Code  Gb  putchar.o [3]
+putchar                 0x002c6eb1       0xc  Code  Gb  putchar.o [3]
 raw_icekong             0x20010498       0x8  Data  Gb  main.o [1]
 ret                     0x200104bb       0x1  Data  Gb  rgb.o [1]
 rstr                    0x20010158      0x80  Data  Gb  apollo.o [1]
@@ -773,7 +772,7 @@ uwTick                  0x200104b0       0x4  Data  Gb  stm32f7xx_hal.o [1]
 [6] = shb_l.a
 
    28 846 bytes of readonly  code memory
-  786 738 bytes of readonly  data memory
+  786 690 bytes of readonly  data memory
     9 404 bytes of readwrite data memory (+ 2 048 000 absolute)
 
 Errors: none

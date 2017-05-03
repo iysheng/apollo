@@ -59,12 +59,11 @@ int main()
   //HAL_NVIC_SetPriority(USART2_IRQn, 0x0, 0); 
   
   /* Output a message on Hyperterminal using printf function */
-  printf("\r\n*****Welocome to Apollo's world!*****\n\r");
+  printf("\r\n*****Welocome to iysheng's land!*****\n\r");
   CEKONG_init();
   TIM2_init();//导致无法输出PWM
   TIM3_init();//为什么TIM3的初始化要放在TIM2之后才可以正常工作?
-   
-  printf("\r\n*****Tempetuarate&TIM2 init finished!*****\n\r");
+
   MPU_init();
   SDRAM_init();
   
@@ -95,6 +94,7 @@ int main()
     default:break;
     }
     LCD_ShowString(120,130+uline*80,strlen(rstr)*16,32,32,(uint8_t *)rstr);
+    printf("%s\r\n",rstr);
     uline++;
     }
     uline=0;

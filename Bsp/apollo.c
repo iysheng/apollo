@@ -654,7 +654,6 @@ void EXTI3_IRQHandler(void) {
 }
 /*PH7 上升沿 触摸屏*/
 void EXTI9_5_IRQHandler(void) {
-  //FT5206_RD_Reg(FT_REG_NUM_FINGER,&mode,1);//读取触摸点的状态   
   FT5206_Scan();
   __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_7);
 }
