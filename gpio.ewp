@@ -2043,19 +2043,19 @@
     <group>
         <name>HAL-SRC</name>
         <file>
-            <name>$PROJ_DIR$\..\..\STM32Cube_FW_F7_V1.6.0\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal.c</name>
+            <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal_adc.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\STM32Cube_FW_F7_V1.6.0\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_cortex.c</name>
+            <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal_cortex.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal_dma.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\STM32Cube_FW_F7_V1.6.0\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_gpio.c</name>
+            <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal_gpio.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal_ltdc.c</name>

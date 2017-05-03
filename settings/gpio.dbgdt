@@ -1006,7 +1006,7 @@
                     <item>receive</item>
                     <item>mode</item>
                     <item>dma_adc_flag</item>
-                    <item></item>
+                    <item />
                 </expressions>
                 <col-names>
                     <item>Expression</item>
