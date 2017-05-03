@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// IAR ANSI C/C++ Compiler V8.11.1.13263/W32 for ARM      03/May/2017  17:07:55
+// IAR ANSI C/C++ Compiler V8.11.1.13263/W32 for ARM      03/May/2017  19:30:40
 // Copyright 1999-2017 IAR Systems AB.
 //
 //    Cpu mode     =  thumb
 //    Endian       =  little
 //    Source file  =  D:\Apollo\gpio\main.c
 //    Command line =  
-//        -f C:\Users\iysheng\AppData\Local\Temp\EW1F45.tmp
+//        -f C:\Users\iysheng\AppData\Local\Temp\EWCA49.tmp
 //        (D:\Apollo\gpio\main.c -D STM32F767xx -lb D:\Apollo\gpio\Debug\List
 //        -o D:\Apollo\gpio\Debug\Obj --no_cse --no_unroll --no_inline
 //        --no_code_motion --no_tbaa --no_clustering --no_scheduling --debug
@@ -26,8 +26,6 @@
         EXTERN CEKONG_init
         EXTERN CPU_CACHE_Enable
         EXTERN HAL_ADC_Start_DMA
-        EXTERN HAL_ADC_Stop_DMA
-        EXTERN HAL_Delay
         EXTERN HAL_Init
         EXTERN HAL_NVIC_EnableIRQ
         EXTERN HAL_NVIC_SetPriority
@@ -45,6 +43,7 @@
         EXTERN PWM_init
         EXTERN SDRAM_init
         EXTERN SystemClock_Config
+        EXTERN TIM2_init
         EXTERN UART_init
         EXTERN dma_adc_flag
         EXTERN printf
@@ -125,23 +124,22 @@ main:
         BL       IC_init
         LDR.N    R0,??main_0+0x20
         BL       printf
+        BL       TIM2_init
         BL       CEKONG_init
         LDR.N    R0,??main_0+0x24
         BL       printf
         BL       MPU_init
         BL       SDRAM_init
-??main_1:
         MOVS     R2,#+4
         LDR.N    R1,??main_0+0x40
         LDR.N    R0,??main_0+0x28
         BL       HAL_ADC_Start_DMA
+??main_1:
         LDR.N    R0,??main_0+0x2C
         LDRB     R0,[R0, #+0]
         AND      R0,R0,#0xFF
         CMP      R0,#+1
         BNE.N    ??main_1
-        LDR.N    R0,??main_0+0x28
-        BL       HAL_ADC_Stop_DMA
         MOVS     R0,#+0
         LDR.N    R1,??main_0+0x2C
         STRH     R0,[R1, #+0]
@@ -180,9 +178,8 @@ main:
         LDR.N    R1,??main_0+0x48
         LDR.N    R0,??main_0
         BL       printf
-        MOV      R0,#+1000
-        BL       HAL_Delay
         B.N      ??main_1
+        Nop      
         DATA
 ??main_0:
         DC32     ?_3
@@ -238,9 +235,9 @@ main:
 //  32 bytes in section .bss
 //   4 bytes in section .data
 // 148 bytes in section .rodata
-// 348 bytes in section .text
+// 340 bytes in section .text
 // 
-// 348 bytes of CODE  memory
+// 340 bytes of CODE  memory
 // 148 bytes of CONST memory
 //  36 bytes of DATA  memory
 //

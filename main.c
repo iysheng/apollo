@@ -68,7 +68,9 @@ int main()
   printf("\r\n*****Welocome to Apollo's world!*****\n\r");
   //TEMP_init();
   //HAL_ADC_Start(&IADC);//×ª»»¿ªÊ¼
+  TIM2_init();
   CEKONG_init();
+ 
   printf("\r\n*****Tempetuarate&TIM2 init finished!*****\n\r");
   MPU_init();
   SDRAM_init();
@@ -83,17 +85,18 @@ int main()
   POINT_COLOR=RED;
   APPOLO_RGB(0,0,gImage_xiong);
   */
+   HAL_ADC_Start_DMA(&ICEKONG,(uint32_t *)raw_icekong,IDAC_COUNT);
   while(1)
   {
-    HAL_ADC_Start_DMA(&ICEKONG,(uint32_t *)raw_icekong,IDAC_COUNT);
+    //HAL_ADC_Start_DMA(&ICEKONG,(uint32_t *)raw_icekong,IDAC_COUNT);
     if((dma_adc_flag&0xff)==0x01){
-    HAL_ADC_Stop_DMA(&ICEKONG);
+    //HAL_ADC_Stop_DMA(&ICEKONG);
     dma_adc_flag=0X00;
     ftemp=((float)raw_icekong[0])/4095*3300;ftemp=((ftemp-760.0)/2.5)+25;
     
     sprintf((char *)rstr,"temp:raw%d--%0.4f...pa4:%d...pa5:%d...pa6:%d\n\r",raw_icekong[0],ftemp,raw_icekong[1],raw_icekong[2],raw_icekong[3]);
     printf("%s\r\n",rstr);
-    HAL_Delay(1000);
+    //HAL_Delay(1000);
     }
   }
    while(1){
