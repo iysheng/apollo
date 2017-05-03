@@ -5,11 +5,13 @@
 #include "math.h"
 
 
+
 extern UART_HandleTypeDef IUART;
-extern TIM_HandleTypeDef ITIM;
+extern TIM_HandleTypeDef ITIM3;
 extern TIM_HandleTypeDef ITIM5;
 extern TIM_OC_InitTypeDef IConfig;
-extern ADC_HandleTypeDef IADC;
+extern ADC_HandleTypeDef IADC,ICEKONG;
+extern DMA_HandleTypeDef IDMA_ADC;
 extern char rstr[RSTR_SIZE]; 
 extern uint32_t led_flag;
 extern TIM_IC_InitTypeDef IC_Config;
@@ -24,6 +26,7 @@ extern uint32_t BACK_COLOR;
 extern uint32_t SystemCoreClock;//该系统变量实时等于系统时钟sysclock
 extern uint8_t lcd_led_flag;
 extern _touch_dev tp_dev;
+extern uint16_t dma_adc_flag;
 int sscanf_i = 0;
 
 //uint8_t mpudata[128] __attribute__((at(0x20002000)));
@@ -33,6 +36,7 @@ uint8_t *mpudata=(uint8_t *)(0x20002000);
 
 uint8_t * mpup;
 uint8_t sdram_test[16];
+uint16_t raw_icekong[IDAC_COUNT];
 int main()
 { 
   uint32_t uitemp;
@@ -50,57 +54,50 @@ int main()
   HAL_NVIC_EnableIRQ(EXTI2_IRQn);
   HAL_NVIC_SetPriority(EXTI2_IRQn, 0x0, 1);
   HAL_NVIC_EnableIRQ(EXTI3_IRQn);
-  HAL_NVIC_SetPriority(EXTI3_IRQn, 0x0, 1);
-  
+  HAL_NVIC_SetPriority(EXTI3_IRQn, 0x0, 1);  
 
   UART_init(&IUART);
-  //TIM_init(&ITIM);
-  //PWM_init(&ITIM,&IConfig,TIM_CHANNEL_4);
+  
+  PWM_init(&ITIM3,&IConfig,TIM_CHANNEL_4);
+  //TIM_init(&ITIM3);
   IC_init(&ITIM5,&IC_Config,TIM_CHANNEL_1);
   //HAL_NVIC_EnableIRQ(USART2_IRQn);
   //HAL_NVIC_SetPriority(USART2_IRQn, 0x0, 0); 
-  //LED_on();
-  //HAL_Delay(1000);//延时1000ms
+  
   /* Output a message on Hyperterminal using printf function */
   printf("\r\n*****Welocome to Apollo's world!*****\n\r");
-  TEMP_init();
+  //TEMP_init();
+  //HAL_ADC_Start(&IADC);//转换开始
+  CEKONG_init();
   printf("\r\n*****Tempetuarate&TIM2 init finished!*****\n\r");
-  HAL_ADC_Start(&IADC);//转换开始
-  mpudata[0]=10;
   MPU_init();
   SDRAM_init();
+  /*
   LCD_Init();
   tp_dev.init();
-  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);//初始化触摸屏按键中断
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0x0, 1);
-  /*for(uitemp=0;uitemp<16;uitemp++)
-  {
-    sdram_test[uitemp]=uitemp*2;
-  }
-  for(uitemp=0;uitemp<16;uitemp++)
-  {
-  sprintf((char *)rstr,"beforevalue=%d--%d.\n\r",uitemp,sdramdata[uitemp]);
-  printf("%s",rstr);
-  }
-  FMC_SDRAM_WriteBuffer(sdram_test,0x00,16);
-  for(uitemp=0;uitemp<16;uitemp++)
-  {
-  sprintf((char *)rstr,"aftervalue=%d--%d.\n\r",uitemp,sdramdata[uitemp]);
-  printf("%s",rstr);
-  }*/
-  //FMC_SDRAM_ReadBuffer(sdram_test+1,0x00,16);
-  //sprintf((char *)rstr,"value=%d--%d.\n\r",sdram_test[0],sdram_test[1]);
-  //printf("%s",rstr);
+ 
   BACK_COLOR=WHITE;
   LTDC_Clear(WHITE);
   POINT_COLOR=RED;
   APPOLO_RGB(0,0,gImage_xiong);
-  HAL_Delay(1000);
-  //sprintf((char *)rstr,"%s","https://github.com/iysheng/apollo");
-  //LCD_ShowString(0,272,10+strlen(rstr)*16,32,32,(uint8_t *)rstr);log(1+tp_dev.sta&0x1f)/log(2) 
-
+  */
+  while(1)
+  {
+    HAL_ADC_Start_DMA(&ICEKONG,(uint32_t *)raw_icekong,IDAC_COUNT);
+    if((dma_adc_flag&0xff)==0x01){
+    HAL_ADC_Stop_DMA(&ICEKONG);
+    dma_adc_flag=0X00;
+    ftemp=((float)raw_icekong[0])/4095*3300;ftemp=((ftemp-760.0)/2.5)+25;
+    
+    sprintf((char *)rstr,"temp:raw%d--%0.4f...pa4:%d...pa5:%d...pa6:%d\n\r",raw_icekong[0],ftemp,raw_icekong[1],raw_icekong[2],raw_icekong[3]);
+    printf("%s\r\n",rstr);
+    HAL_Delay(1000);
+    }
+  }
    while(1){
-    if(tp_dev.sta!=0)
+    /*if(tp_dev.sta!=0)//有按键按下
     {
       tp_dev.sta&=0x1f;
       while(tp_dev.sta&0x01){
@@ -114,15 +111,19 @@ int main()
       LCD_ShowString(200,50+3*80,32*16,32,32,(uint8_t *)rstr);
       i=0;
       tp_dev.sta=0;
+    }*/
+    if((ic_state&0x80)==0x80)
+    {
+      mpudata[0]++;
+      ic_state&=0x3f;
+      hole_ic_value=ic_state*(0xffffffff);
+      hole_ic_value+=ic_value;
+      ic_value=hole_ic_value/1000;
+      sprintf((char *)rstr,"value=%dms,hole_value=%lldus.\n\r",ic_value,hole_ic_value);
+      printf("%s",rstr);
+      ic_state=0x00;
     }
-    /*ic_state&=0x3f;
-    hole_ic_value=ic_state*(0xffffffff);
-    hole_ic_value+=ic_value;
-    ic_value=hole_ic_value/1000;
-    ic_state=0x00;*/
-    //sprintf((char *)rstr,"tempture=%f,hole_value=%lldus.\n\r",ftemp,hole_ic_value);    
-    //MPU_set_protection(0x20002000,10,MPU_REGION_NUMBER0,MPU_REGION_PRIV_RO_URO );
-    //printf("%s",rstr);
+    
     switch(uline)
     {
     case 0:{sprintf((char *)rstr,"%s","iysheng@163.com");break;}
@@ -133,30 +134,14 @@ int main()
     sprintf((char *)rstr,"%0.3f",ftemp);HAL_Delay(1000);break;}
     default:break;
     }
-    LCD_ShowString(120,50+uline*80,strlen(rstr)*16,32,32,(uint8_t *)rstr);
+    //LCD_ShowString(120,50+uline*80,strlen(rstr)*16,32,32,(uint8_t *)rstr);
+    printf("%s\r\n",rstr);
     uline++;
-    uline%=5;   
+    uline%=5;  
   }
   
 #if 0
-  while(1){
-  if((ic_state&0x80)==0x80)
-  {
-    mpudata[0]++;
-    ic_state&=0x3f;
-    hole_ic_value=ic_state*(0xffffffff);
-    hole_ic_value+=ic_value;
-    ic_value=hole_ic_value/1000;
-    sprintf((char *)rstr,"value=%dms,hole_value=%lldus.\n\r",ic_value,hole_ic_value);
-    MPU_set_protection(0x20002000,10,MPU_REGION_NUMBER0,MPU_REGION_PRIV_RO_URO );
-    printf("%s",rstr);
-    ic_state=0x00;
-  }
-  else
-  {sprintf((char *)rstr,"value=%d.\n\r",mpudata[0]);
-  printf("%s",rstr);}
-  HAL_Delay(1000);
-    
+  while(1){    
   /*
   (IConfig.Pulse)++;
   HAL_TIM_PWM_ConfigChannel(&ITIM,&IConfig,TIM_CHANNEL_4);
@@ -172,11 +157,7 @@ int main()
   sprintf((char *)rstr,"tem=%f**sclk=%d.\n\r",ftemp,SystemCoreClock);
   printf("%s",rstr);
   */ 
-  //HAL_Delay(1000);  
-  /*scanf("%s",stemp);
-  printf("%s",stemp);
-  memset(stemp, 0, strlen(stemp));*/
-    
+  //HAL_Delay(1000);    
  /* scanf("%c",&ctemp);
   printf("%c",ctemp);
   if(ctemp != '\r')
