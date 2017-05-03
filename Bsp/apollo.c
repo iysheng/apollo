@@ -386,7 +386,7 @@ void TIM3_init(void)
   memset(&iConfig,0,sizeof(iConfig));
   __HAL_RCC_TIM3_CLK_ENABLE();
   ITIM3.Instance=TIM3;
-  ITIM3.Init.Period=9999;//周期为9999--5000ms，频率为0.2hz
+  ITIM3.Init.Period=999;//周期为9999--5000ms，频率为0.2hz
   ITIM3.Init.Prescaler=53999;//采样时钟间隔为500us，频率为2khz
   ITIM3.Init.CounterMode=TIM_COUNTERMODE_UP;
   HAL_TIM_PWM_Init(&ITIM3);
@@ -394,25 +394,9 @@ void TIM3_init(void)
   iConfig.Pulse=499;
   iConfig.OCPolarity=TIM_OCPOLARITY_HIGH;
   HAL_TIM_PWM_ConfigChannel(&ITIM3,&iConfig,TIM_CHANNEL_4);
-  HAL_TIM_PWM_ConfigChannel(&ITIM3,&iConfig,TIM_CHANNEL_3);
   HAL_TIM_PWM_Start(&ITIM3,TIM_CHANNEL_4);
-  HAL_TIM_PWM_Start(&ITIM3,TIM_CHANNEL_3);
-}
-void PWM_init(TIM_HandleTypeDef *ITIMX,TIM_OC_InitTypeDef* IConfig,uint32_t IChannel)
-{
-  __HAL_RCC_TIM3_CLK_ENABLE();
-  ITIMX->Instance=TIM3;
-  //ITIMX->Init.Period=199;//199--200us--5khz
-  //ITIMX->Init.Prescaler=107;//107--1us
-  ITIMX->Init.Period=999;//周期为500ms，频率为2hz
-  ITIMX->Init.Prescaler=53999;//采样时钟间隔为500us，频率为2khz
-  ITIMX->Init.CounterMode=TIM_COUNTERMODE_UP;
-  HAL_TIM_PWM_Init(ITIMX);
-  IConfig->OCMode=TIM_OCMODE_PWM1;
-  IConfig->Pulse=499;//99--100us
-  IConfig->OCPolarity=TIM_OCPOLARITY_HIGH;//输出极性配置
-  HAL_TIM_PWM_ConfigChannel(ITIMX,IConfig,IChannel);//TIM_CHANNEL_4 
-  HAL_TIM_PWM_Start(ITIMX,IChannel);  
+  //HAL_TIM_PWM_ConfigChannel(&ITIM3,&iConfig,TIM_CHANNEL_3); //PB0
+  //HAL_TIM_PWM_Start(&ITIM3,TIM_CHANNEL_3);
 }
 
 void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)
@@ -421,7 +405,7 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)
   if(htim->Instance==TIM3)
   {
   __HAL_RCC_GPIOB_CLK_ENABLE();		//开启GPIOB时钟  	
-  GPIO_Initure.Pin=GPIO_PIN_1|GPIO_PIN_0; //PB1--CH4 PB0--CH3
+  GPIO_Initure.Pin=GPIO_PIN_1; //PB1--CH4 PB0--CH3
   GPIO_Initure.Mode=GPIO_MODE_AF_PP;  //复用推挽输出
   GPIO_Initure.Pull=GPIO_PULLUP;          //上拉
   GPIO_Initure.Speed=GPIO_SPEED_HIGH;     //高速
@@ -655,6 +639,7 @@ void EXTI2_IRQHandler(void) {
 void EXTI3_IRQHandler(void) {
   __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_3);
   /*感觉去抖效果不大*/
+  /*
   key_qd[key_qd[2]]=HAL_GetTick();
   key_qd[2]++;
   if(key_qd[2]==2)
@@ -663,7 +648,8 @@ void EXTI3_IRQHandler(void) {
       LCD_LED(++lcd_led_flag%2);
     }
    key_qd[2]=0;
-  }
+  }*/
+  HAL_GPIO_TogglePin(GPIOB,GPIO_PIN_5);//LCD_LED
   HAL_GPIO_TogglePin(GPIOB,GPIO_PIN_0);//DS1
 }
 /*PH7 上升沿 触摸屏*/

@@ -45,7 +45,6 @@ void UART_init(UART_HandleTypeDef *UARTX);
 //void TIM_init(TIM_HandleTypeDef *ITIMX);
 void TIM2_init(void);
 void TIM3_init(void);
-void PWM_init(TIM_HandleTypeDef *ITIMX,TIM_OC_InitTypeDef* IConfig,uint32_t IChannel);
 void IC_init(TIM_HandleTypeDef *ITIMX,TIM_IC_InitTypeDef* IConfig,uint32_t IChannel);
 void MPU_set_protection(uint32_t addr,uint8_t size,uint8_t num,uint8_t ap);
 void MPU_init(void);
